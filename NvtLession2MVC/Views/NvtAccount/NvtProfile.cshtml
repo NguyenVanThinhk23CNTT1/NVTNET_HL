@@ -1,0 +1,31 @@
+﻿@model NvtLession2MVC.Models.NvtAccount
+
+@{
+    ViewData["Title"] = "Thông tin chi tiết";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0 p-4">
+                <div class="text-center mb-4">
+                    <img src="@Model.Avatar" class="rounded-circle shadow" style="width: 150px; height: 150px; object-fit: cover;" alt="@Model.Name">
+                    <h2 class="fw-bold mt-3">@Model.Name</h2>
+                    <p class="text-muted">@Model.Bio</p>
+                </div>
+                <hr />
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item"><strong>ID:</strong> @Model.Id</li>
+                    <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                    <li class="list-group-item"><strong>Số điện thoại:</strong> @Model.Phone</li>
+                    <li class="list-group-item"><strong>Địa chỉ:</strong> @Model.Address</li>
+                    <li class="list-group-item"><strong>Ngày sinh:</strong> @Model.Birthday.ToString("dd/MM/yyyy")</li>
+                    <li class="list-group-item"><strong>Giới tính:</strong> @(Model.Gender == 1 ? "Nam" : "Nữ")</li>
+                </ul>
+                <div class="text-center">
+                    <a asp-action="NvtIndex" class="btn btn-secondary px-4">Quay lại danh sách</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

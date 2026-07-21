@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    var accounts = ViewBag.accounts;
+}
+
+<div class="container py-4">
+    <div class="row">
+        @foreach (var item in accounts)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="thumbnail card shadow-sm border-0 h-100 p-2 text-center">
+                    <!-- 💡 Chỉnh sửa kích thước ảnh ở đây: Dùng style cố định chiều cao và object-fit để ảnh không bị to và méo -->
+                    <div style="height: 350px; overflow: hidden;" class="rounded">
+                        <img src="@item.Avatar" alt="@item.Name" class="w-100 h-100 object-fit-cover">
+                    </div>
+                    <div class="caption card-body">
+                        <h3 class="fw-bold fs-4">@item.Name</h3>
+                        <p class="text-muted">
+                            @item.Bio
+                        </p>
+                        <p>
+                            <!-- 💡 Đã bổ sung asp-route-id để truyền ID sang trang chi tiết khi click -->
+                            <a asp-route="profile" class="btn btn-success btn-block">Profile</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

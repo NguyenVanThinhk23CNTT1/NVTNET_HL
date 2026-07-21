@@ -1,0 +1,98 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<div class="container py-4">
+    <!-- Phần Banner trang trí đẹp mắt -->
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold text-primary">Hệ Thống Quản Lý Sản Phẩm</h1>
+            <p class="col-md-8 fs-5 text-muted mt-2">
+                Chào mừng bạn đến với trang quản lý dữ liệu sản phẩm trong mô hình ASP.NET Core MVC. Giao diện được thiết kế hiện đại, trực quan và dễ dàng thao tác.
+            </p>
+            <button class="btn btn-dark btn-lg mt-2 shadow-sm px-4" type="button">Khám phá ngay</button>
+        </div>
+    </div>
+
+    <!-- Tiêu đề trang quản lý -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark mb-0">Danh sách sản phẩm</h3>
+    </div>
+
+    <!-- Bảng hiển thị dữ liệu -->
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark text-uppercase fs-7">
+                    <tr>
+                        <th class="ps-4">ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Created At</th>
+                        <th class="text-center">Image</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dòng dữ liệu mẫu 1 -->
+                    <tr>
+                        <td class="ps-4 fw-semibold">1</td>
+                        <td>Product 1</td>
+                        <td class="text-success fw-bold">500,000 đ</td>
+                        <td>25-12-2020</td>
+                        <td class="text-center">
+                            <img src="https://via.placeholder.com/60" alt="Product 1" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" />
+                        </td>
+                        <td class="text-end pe-4">
+                            <!-- Nút View thuần giao diện, chưa có link -->
+                            <a href="#" class="btn btn-success btn-sm px-3 shadow-sm">View</a>
+                        </td>
+                    </tr>
+                    <!-- Dòng dữ liệu mẫu 2 -->
+                    <tr>
+                        <td class="ps-4 fw-semibold">2</td>
+                        <td>Product 2</td>
+                        <td class="text-success fw-bold">700,000 đ</td>
+                        <td>25-12-2020</td>
+                        <td class="text-center">
+                            <img src="https://via.placeholder.com/60" alt="Product 2" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" />
+                        </td>
+                        <td class="text-end pe-4">
+                            <!-- Nút View thuần giao diện, chưa có link -->
+                            <a href="#" class="btn btn-success btn-sm px-3 shadow-sm">View</a>
+                        </td>
+                    </tr>
+                    <!-- Dòng dữ liệu mẫu 3 -->
+                    <tr>
+                        <td class="ps-4 fw-semibold">3</td>
+                        <td>Product 3</td>
+                        <td class="text-success fw-bold">650,000 đ</td>
+                        <td>25-12-2020</td>
+                        <td class="text-center">
+                            <img src="https://via.placeholder.com/60" alt="Product 3" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" />
+                        </td>
+                        <td class="text-end pe-4">
+                            <!-- Nút View thuần giao diện, chưa có link -->
+                            <a href="#" class="btn btn-success btn-sm px-3 shadow-sm">View</a>
+                        </td>
+                    </tr>
+                    <!-- Dòng dữ liệu mẫu 4 -->
+                    <tr>
+                        <td class="ps-4 fw-semibold">4</td>
+                        <td>Product 4</td>
+                        <td class="text-success fw-bold">550,000 đ</td>
+                        <td>25-12-2020</td>
+                        <td class="text-center">
+                            <img src="https://via.placeholder.com/60" alt="Product 4" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" />
+                        </td>
+                        <td class="text-end pe-4">
+                            <!-- Nút View thuần giao diện, chưa có link -->
+                            <a href="#" class="btn btn-success btn-sm px-3 shadow-sm">View</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
