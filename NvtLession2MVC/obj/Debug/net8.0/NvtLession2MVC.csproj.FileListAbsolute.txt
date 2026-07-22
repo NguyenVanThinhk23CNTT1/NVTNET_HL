@@ -32,3 +32,4 @@ C:\CongCuASP-NetCore\K23CNT1_NETCORE\NvtLession2MVC\obj\Debug\net8.0\refint\NvtL
 C:\CongCuASP-NetCore\K23CNT1_NETCORE\NvtLession2MVC\obj\Debug\net8.0\NvtLession2MVC.pdb
 C:\CongCuASP-NetCore\K23CNT1_NETCORE\NvtLession2MVC\obj\Debug\net8.0\NvtLession2MVC.genruntimeconfig.cache
 C:\CongCuASP-NetCore\K23CNT1_NETCORE\NvtLession2MVC\obj\Debug\net8.0\ref\NvtLession2MVC.dll
+C:\CongCuASP-NetCore\K23CNT1_NETCORE\NvtLession2MVC\obj\Debug\net8.0\NvtLession2MVC.sourcelink.json

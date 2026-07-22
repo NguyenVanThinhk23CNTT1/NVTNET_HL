@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NvtLession2MVC.Models;
-using NvtLesson2MVC.Models;
+using NvtLession2MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +60,7 @@ namespace NvtLesson2MVC.Controllers
         }
 
         // Cấu hình route nhận thêm {id} để hiển thị đúng đường dẫn chi tiết của từng người
-        [Route("chi-tiet/{id}")]
+        [Route("chi-tiet/{id}" , Name = "profile")]
         public IActionResult NvtProfile(int id)
         {
             // Danh sách dữ liệu mẫu đầy đủ các ID

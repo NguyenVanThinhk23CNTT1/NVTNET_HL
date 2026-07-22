@@ -20,7 +20,7 @@
                         </p>
                         <p>
                             <!-- 💡 Đã bổ sung asp-route-id để truyền ID sang trang chi tiết khi click -->
-                            <a asp-route="profile" class="btn btn-success btn-block">Profile</a>
+                            <a asp-route="profile" asp-route-id="@item.Id" class="btn btn-success btn-block">Profile</a>
                         </p>
                     </div>
                 </div>
