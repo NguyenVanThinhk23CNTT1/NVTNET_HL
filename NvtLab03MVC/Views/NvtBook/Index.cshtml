@@ -1,0 +1,96 @@
+﻿@model IEnumerable<NvtLab03MVC.Models.NvtBook>
+
+@{
+    ViewData["Title"] = "Danh sách các cuốn sách";
+}
+
+<div class="container my-4">
+    <!-- BÀI 2: Call Partial View Banner -->
+    <partial name="_NvtBanner" />
+
+    <h2 class="mb-3 text-uppercase fw-bold text-dark">Danh sách các cuốn sách</h2>
+
+    <!-- Form ComboBox Lọc dữ liệu -->
+    <form asp-action="Index" method="get" class="row g-2 mb-4 align-items-center">
+        <div class="col-auto">
+            <select name="authorId" asp-items="ViewBag.Authors" class="form-select form-select-sm" style="width: 160px;">
+                <option value="">Chọn tác giả</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select name="genreId" asp-items="ViewBag.Genres" class="form-select form-select-sm" style="width: 160px;">
+                <option value="">Chọn Thể loại</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary btn-sm px-3">Tìm kiếm</button>
+            <a asp-action="Create" class="btn btn-danger btn-sm px-3">Thêm mới</a>
+        </div>
+    </form>
+
+    <!-- BÀI 3: Call Partial View bằng Ajax -->
+    <div class="mb-3">
+        <button id="btnLoadPopular" class="btn btn-outline-success btn-sm fw-bold">
+            ⚡ Tải nhanh danh sách Ajax
+        </button>
+    </div>
+    <div id="popularBookArea"></div>
+
+    <!-- BÀI 4: Hiển thị View Component sang trọng -->
+    @await Component.InvokeAsync("NvtBook")
+
+    <!-- Bảng danh sách chính -->
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-bordered align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 50px;">Id</th>
+                    <th>Tiêu đề</th>
+                    <th style="width: 100px;">Tác giả</th>
+                    <th style="width: 100px;">Thể loại</th>
+                    <th style="width: 120px;">Giá</th>
+                    <th style="width: 120px;">Hình ảnh</th>
+                    <th style="width: 80px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Title</td>
+                        <td>@item.AuthorId</td>
+                        <td>@item.GenreId</td>
+                        <td>@item.Price.ToString("0")</td>
+                        <td class="text-center">
+                            <img src="~/images/products/@item.Image" alt="@item.Title" style="height: 60px; object-fit: cover;" />
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm px-3">Sửa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnLoadPopular").click(function () {
+                $.ajax({
+                    url: '@Url.Action("NvtPopularBook", "NvtBook")',
+                    type: 'GET',
+                    success: function (response) {
+                        $("#popularBookArea").html(response);
+                    },
+                    error: function () {
+                        alert("Không thể tải dữ liệu!");
+                    }
+                });
+            });
+        });
+    </script>
+}

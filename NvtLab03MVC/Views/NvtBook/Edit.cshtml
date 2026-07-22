@@ -1,0 +1,50 @@
+﻿@model NvtLab03MVC.Models.NvtBook
+
+@{
+    ViewData["Title"] = "Chỉnh sửa sách";
+}
+
+<div class="container my-4" style="max-width: 650px;">
+    <h3 class="mb-4">Chỉnh sửa sách</h3>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên sách</label>
+            <input asp-for="Title" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tác giả</label>
+            <select asp-for="AuthorId" asp-items="Model.Authors" class="form-select"></select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Thể loại</label>
+            <select asp-for="GenreId" asp-items="Model.Genres" class="form-select"></select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Giá sách</label>
+            <input asp-for="Price" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tổng số trang</label>
+            <input asp-for="TotalPage" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Hình ảnh/ Poster</label>
+            <input type="file" name="fileImage" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Giới thiệu ngắn</label>
+            <textarea asp-for="Sumary" class="form-control" rows="3" placeholder="Nội dung giới thiệu sách..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary px-4">Lưu lại</button>
+    </form>
+</div>

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<NvtLab03MVC.Models.NvtBook>
+
+<div class="card border-success mb-4">
+    <div class="card-header bg-success text-white fw-bold">
+        🔥 Danh sách sách nổi bật (Được tải động qua jQuery Ajax)
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 mb-3 text-center">
+                    <div class="border p-2 rounded">
+                        <img src="~/images/products/@item.Image" alt="@item.Title" style="height: 80px; object-fit: cover;" class="mb-2" />
+                        <h6 class="text-truncate">@item.Title</h6>
+                        <span class="badge bg-danger">@item.Price.ToString("N0") VNĐ</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
