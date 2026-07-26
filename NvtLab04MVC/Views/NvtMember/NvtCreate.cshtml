@@ -1,0 +1,56 @@
+﻿@model NvtLab04MVC.Models.NvtMember
+
+@{
+    ViewData["Title"] = "Thêm mới thành viên";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title fw-bold mb-0">
+                        <i class="bi bi-person-plus me-2"></i>Thêm mới thành viên
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="NvtCreate" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Mã thành viên (Tự động)</label>
+                            <input asp-for="MemberId" class="form-control bg-light font-monospace" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Tên đăng nhập</label>
+                            <input asp-for="Username" class="form-control" placeholder="Ví dụ: chungtv" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Họ và tên</label>
+                            <input asp-for="Fullname" class="form-control" placeholder="Ví dụ: Trịnh Văn Chung" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Mật khẩu</label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="******" required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="trinhvanchung.devmaster@gmail.com" required />
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="NvtIndex" class="btn btn-outline-secondary px-3">
+                                <i class="bi bi-arrow-left me-1"></i>Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                                <i class="bi bi-check-circle me-1"></i>Lưu thành viên
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

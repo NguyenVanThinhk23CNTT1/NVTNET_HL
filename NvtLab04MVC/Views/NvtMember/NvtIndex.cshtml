@@ -1,0 +1,66 @@
+﻿@model IEnumerable<NvtLab04MVC.Models.NvtMember>
+
+@{
+    ViewData["Title"] = "Danh sách thành viên";
+}
+
+<div class="container py-4">
+    <!-- Header Card -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center bg-white rounded p-4">
+            <div>
+                <h3 class="fw-bold text-primary mb-1">
+                    <i class="bi bi-people-fill me-2"></i>Danh sách thành viên
+                </h3>
+                <p class="text-muted mb-0 small">Quản lý thông tin tài khoản và phân quyền người dùng hệ thống</p>
+            </div>
+            <a asp-action="NvtCreate" class="btn btn-success shadow-sm px-3 fw-semibold">
+                <i class="bi bi-person-plus-fill me-1"></i>Thêm mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Bảng Dữ Liệu -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-3" style="width: 250px;">Mã thành viên</th>
+                            <th>Username</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th class="text-center" style="width: 150px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-3">
+                                    <span class="badge bg-secondary font-monospace text-wrap" style="max-width: 230px;">@item.MemberId</span>
+                                </td>
+                                <td><span class="fw-bold text-dark">@item.Username</span></td>
+                                <td>@item.Fullname</td>
+                                <td>
+                                    <a href="mailto:@item.Email" class="text-decoration-none">
+                                        <i class="bi bi-envelope me-1"></i>@item.Email
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="NvtEdit" asp-route-id="@item.MemberId" class="btn btn-outline-warning btn-sm me-1" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </a>
+                                    <a asp-action="NvtDelete" asp-route-id="@item.MemberId" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa thành viên này?');" title="Xóa">
+                                        <i class="bi bi-trash3-fill"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

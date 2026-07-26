@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NvtLab04MVC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Thêm Bootstrap Icons giúp nút bấm sinh động hơn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* CSS giúp menu đều và phản hồi đẹp mắt */
+        .navbar-nav .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-radius: 6px;
+            padding: 8px 14px !important;
+        }
+
+            .navbar-nav .nav-link:hover {
+                background-color: #f0f2f5;
+                color: #0d6efd !important;
+            }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm mb-4">
+            <div class="container">
+                <!-- Logo / Brand -->
+                <a class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-code-square fs-4"></i> NvtLab04MVC
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <!-- Danh sách các nút Nav căn chỉnh đều nhau -->
+                    <ul class="navbar-nav ms-auto align-items-center gap-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-check me-1"></i> Privacy
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-controller="NvtMember" asp-action="NvtIndex">
+                                <i class="bi bi-people me-1"></i> Danh sách Thành viên
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-controller="NvtBook" asp-action="Index">
+                                <i class="bi bi-book me-1"></i> Danh sách Sách
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container flex-grow-1">
+        <main role="main" class="pb-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer bg-white py-3 mt-auto text-muted shadow-sm">
+        <div class="container text-center">
+            &copy; 2026 - NvtLab04MVC - <a class="text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NvtLab03MVC</title>
+    <!-- Thêm Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/style/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Thêm Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Navbar Điều Hướng -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-controller="NvtBook" asp-action="Index">
+                    <i class="bi bi-code-slash me-1"></i>NvtLab03MVC
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="NvtBook" asp-action="Index">
+                                <i class="bi bi-journal-bookmark-fill me-1"></i>Quản lý Sách
+                            </a>
+                        </li>
+                        <!-- Nút bấm chuyển sang trang Danh Sách Thành Viên -->
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold btn btn-outline-primary ms-lg-2 px-3 text-start" asp-controller="NvtMember" asp-action="NvtIndex">
+                                <i class="bi bi-people-fill me-1"></i>Danh sách Thành viên
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Nội dung chính các View sẽ render ở đây -->
+    <main role="main" class="flex-shrink-0">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-white border-top text-center text-muted">
+        <div class="container">
+            <span>&copy; 2026 - NvtLab04MVC - Quản lý dữ liệu hệ thống</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
