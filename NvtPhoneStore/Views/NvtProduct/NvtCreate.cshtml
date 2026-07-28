@@ -1,0 +1,43 @@
+﻿@model NvtPhoneStore.Models.NvtProduct
+
+@{
+    ViewData["Title"] = "Thêm mới sản phẩm";
+}
+
+<div class="container py-4" style="max-width: 600px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Thêm mới điện thoại</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="NvtCreate" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên điện thoại</label>
+                    <input asp-for="NvtProductName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Hãng / Danh mục</label>
+                    <input asp-for="NvtCategory" class="form-control" placeholder="Apple, Samsung, Xiaomi..." required />
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Giá bán (VNĐ)</label>
+                        <input asp-for="NvtPrice" type="number" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Số lượng tồn</label>
+                        <input asp-for="NvtQuantity" type="number" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mô tả sản phẩm</label>
+                    <textarea asp-for="NvtDescription" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a asp-action="NvtIndex" class="btn btn-secondary">Quay lại</a>
+                    <button type="submit" class="btn btn-success px-4">Lưu sản phẩm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

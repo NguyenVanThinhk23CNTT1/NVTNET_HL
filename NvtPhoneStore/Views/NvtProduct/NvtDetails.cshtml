@@ -1,0 +1,58 @@
+﻿@model NvtPhoneStore.Models.NvtProduct
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="container py-4" style="max-width: 700px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-info text-white py-3">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-info-circle me-2"></i>Thông tin chi tiết sản phẩm
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold">MÃ SẢN PHẨM</label>
+                    <p class="fs-5 fw-bold text-dark">#@Model.NvtProductId</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold">HÃNG / DANH MỤC</label>
+                    <p><span class="badge bg-primary fs-6">@Model.NvtCategory</span></p>
+                </div>
+                <div class="col-12">
+                    <label class="text-muted small fw-bold">TÊN ĐIỆN THOẠI</label>
+                    <h3 class="text-primary fw-bold">@Model.NvtProductName</h3>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold">GIÁ BÁN</label>
+                    <p class="fs-4 text-danger fw-bold">@Model.NvtPrice.ToString("N0") VNĐ</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold">SỐ LƯỢNG TỒN KHO</label>
+                    <p class="fs-5 fw-semibold text-dark">@Model.NvtQuantity chiếc</p>
+                </div>
+                <div class="col-12">
+                    <label class="text-muted small fw-bold">MÔ TẢ SẢN PHẨM</label>
+                    <div class="p-3 bg-light rounded border">
+                        @(string.IsNullOrEmpty(Model.NvtDescription) ? "Chưa có mô tả cho sản phẩm này." : Model.NvtDescription)
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="NvtIndex" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+                </a>
+                <div>
+                    <a asp-action="NvtEdit" asp-route-id="@Model.NvtProductId" class="btn btn-warning px-4 me-2">
+                        <i class="bi bi-pencil-square me-1"></i>Sửa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

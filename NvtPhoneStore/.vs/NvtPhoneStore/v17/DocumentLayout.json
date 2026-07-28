@@ -1,0 +1,182 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\views\\nvtproduct\\nvtindex.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:views\\nvtproduct\\nvtindex.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\controllers\\nvtproductcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:controllers\\nvtproductcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\views\\nvtproduct\\nvtdetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:views\\nvtproduct\\nvtdetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\views\\nvtproduct\\nvtedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:views\\nvtproduct\\nvtedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\views\\nvtproduct\\nvtcreate.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:views\\nvtproduct\\nvtcreate.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|c:\\congcuasp-netcore\\k23cnt1_netcore\\nvtphonestore\\models\\nvtphonestoredbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}|NvtPhoneStore.csproj|solutionrelative:models\\nvtphonestoredbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 110,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NvtDetails.cshtml",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtDetails.cshtml",
+              "RelativeDocumentMoniker": "Views\\NvtProduct\\NvtDetails.cshtml",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtDetails.cshtml",
+              "RelativeToolTip": "Views\\NvtProduct\\NvtDetails.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:38:01.313Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:30:55.238Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "NvtEdit.cshtml",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtEdit.cshtml",
+              "RelativeDocumentMoniker": "Views\\NvtProduct\\NvtEdit.cshtml",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtEdit.cshtml",
+              "RelativeToolTip": "Views\\NvtProduct\\NvtEdit.cshtml",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwCwAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:30:41.702Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NvtCreate.cshtml",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtCreate.cshtml",
+              "RelativeDocumentMoniker": "Views\\NvtProduct\\NvtCreate.cshtml",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtCreate.cshtml",
+              "RelativeToolTip": "Views\\NvtProduct\\NvtCreate.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAQwCoAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:30:21.847Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NvtIndex.cshtml",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtIndex.cshtml",
+              "RelativeDocumentMoniker": "Views\\NvtProduct\\NvtIndex.cshtml",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Views\\NvtProduct\\NvtIndex.cshtml",
+              "RelativeToolTip": "Views\\NvtProduct\\NvtIndex.cshtml",
+              "ViewState": "AgIAABsAAAAAAAAAAAAswDYAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-27T02:29:54.265Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NvtProductController.cs",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Controllers\\NvtProductController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NvtProductController.cs",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Controllers\\NvtProductController.cs",
+              "RelativeToolTip": "Controllers\\NvtProductController.cs",
+              "ViewState": "AgIAAGkAAAAAAAAAAAAowIUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:29:11.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABwAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:26:34.156Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-27T02:25:41.042Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "NvtPhoneStoreDbContext.cs",
+              "DocumentMoniker": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Models\\NvtPhoneStoreDbContext.cs",
+              "RelativeDocumentMoniker": "Models\\NvtPhoneStoreDbContext.cs",
+              "ToolTip": "C:\\CongCuASP-NetCore\\K23CNT1_NETCORE\\NvtPhoneStore\\Models\\NvtPhoneStoreDbContext.cs",
+              "RelativeToolTip": "Models\\NvtPhoneStoreDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-27T02:25:33.755Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

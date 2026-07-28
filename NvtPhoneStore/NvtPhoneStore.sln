@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NvtPhoneStore", "NvtPhoneStore.csproj", "{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD67930-F8E1-40E2-B08A-79D001A1DFFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CBBCA801-688B-49B2-9082-761791037C29}
+	EndGlobalSection
+EndGlobal
