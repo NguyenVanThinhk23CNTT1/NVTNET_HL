@@ -1,0 +1,134 @@
+@model NvtHouseManagement.Models.NvtPhong
+
+@{
+    ViewData["Title"] = "Chi tiết Phòng Trọ";
+    
+    var trangThaiColor = Model.TrangThai == "Trống" || string.IsNullOrEmpty(Model.TrangThai) ? "teal" : 
+                         Model.TrangThai == "Đã thuê" ? "orange" : "error";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Chi Tiết Phòng @Model.SoPhong</h2>
+        <nav class="flex text-on-surface-variant text-[14px] font-medium m-0 mt-1">
+            <a href="@Url.Action("Index", "Home")" class="text-on-surface-variant hover:text-primary text-decoration-none">Dashboard</a>
+            <span class="mx-2">/</span>
+            <a href="@Url.Action("Index", "NvtPhong")" class="text-on-surface-variant hover:text-primary text-decoration-none">Quản lý Phòng Trọ</a>
+            <span class="mx-2">/</span>
+            <span class="text-primary font-bold">Phòng @Model.SoPhong</span>
+        </nav>
+    </div>
+    
+    <div class="flex gap-3">
+        <a href="@Url.Action("Edit", new { id = Model.Id })" class="px-6 py-3 bg-primary text-white rounded-lg text-[14px] font-bold hover:bg-primary-container transition-all shadow-md text-decoration-none flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+            Chỉnh sửa
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Main Info -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-lowest">
+                <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    Thông tin cơ bản
+                </h3>
+                <span class="px-3 py-1 bg-@(trangThaiColor)-500/15 text-@(trangThaiColor)-700 text-[12px] font-bold rounded-full uppercase tracking-tight">
+                    @(string.IsNullOrEmpty(Model.TrangThai) ? "Trống" : Model.TrangThai)
+                </span>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Mã Số (ID)</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0">@Model.Id</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Số Phòng</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0">Phòng @Model.SoPhong</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Vị trí Tầng</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0">Tầng @Model.Tang</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Dãy Trọ</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">apartment</span>
+                            @(Model.DayTro?.TenDayTro ?? "Chưa xác định")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-surface-container-lowest">
+                <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary">category</span>
+                    Chi tiết Loại Phòng
+                </h3>
+            </div>
+            <div class="p-6">
+                @if (Model.LoaiPhong != null) {
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                        <div class="md:col-span-2">
+                            <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Tên Loại Phòng</p>
+                            <p class="text-[18px] font-bold text-primary m-0">@Model.LoaiPhong.TenLoaiPhong</p>
+                        </div>
+                        <div>
+                            <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Đơn Giá Cơ Bản</p>
+                            <p class="text-[16px] font-bold text-secondary m-0">@Model.LoaiPhong.GiaCoBan.ToString("N0") VNĐ</p>
+                        </div>
+                        <div>
+                            <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Sức chứa tối đa</p>
+                            <p class="text-[16px] font-semibold text-on-surface m-0">@Model.LoaiPhong.SoNguoiToiDa Người</p>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.LoaiPhong.MoTa)) {
+                            <div class="md:col-span-2">
+                                <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Mô tả loại phòng</p>
+                                <p class="text-[14px] text-on-surface-variant m-0 bg-surface-container-lowest p-3 rounded-lg border border-slate-100">@Model.LoaiPhong.MoTa</p>
+                            </div>
+                        }
+                    </div>
+                } else {
+                    <p class="text-on-surface-variant text-[14px] italic m-0">Phòng này chưa được gán loại phòng nào.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Sidebar / Actions -->
+    <div class="space-y-6">
+        <div class="bg-surface-container-low rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-[16px] font-bold text-on-surface mb-4 m-0 uppercase tracking-wider text-center">Thao tác nhanh</h3>
+            
+            <div class="flex flex-col gap-3">
+                <a href="@Url.Action("Index")" class="w-full py-3 bg-white text-on-surface font-bold text-[14px] rounded-lg border border-slate-200 hover:bg-slate-50 transition-all text-center text-decoration-none">
+                    Quay lại danh sách
+                </a>
+                
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phòng này không? Hành động này không thể hoàn tác.');">
+                    <button type="submit" class="w-full py-3 bg-error/10 text-error font-bold text-[14px] rounded-lg border border-transparent hover:bg-error/20 transition-all cursor-pointer flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                        Xóa Phòng Trọ
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        @if (Model.DayTro != null) {
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                <h3 class="text-[16px] font-bold text-on-surface mb-4 m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">location_on</span>
+                    Vị trí Dãy Trọ
+                </h3>
+                <p class="text-[14px] font-bold text-on-surface m-0">@Model.DayTro.TenDayTro</p>
+                <p class="text-[14px] text-on-surface-variant mt-1 m-0">@Model.DayTro.DiaChi</p>
+            </div>
+        }
+    </div>
+</div>
