@@ -1,0 +1,280 @@
+@using Microsoft.EntityFrameworkCore
+@inject NvtHouseManagement.Models.NvtDbContext DbContext
+@model IEnumerable<NvtHouseManagement.Models.NvtHopDong>
+
+@{
+    ViewData["Title"] = "Quản lý Hợp đồng";
+    var totalContracts = Model.Count();
+    var activeContracts = Model.Count(h => h.TrangThai == "Hiệu lực");
+    var expiringContracts = Model.Count(h => h.TrangThai == "Hết hạn" || (h.NgayKetThuc.ToDateTime(TimeOnly.MinValue) <= DateTime.Now.AddDays(30) && h.TrangThai == "Hiệu lực"));
+    var liquidatedContracts = Model.Count(h => h.TrangThai == "Đã thanh lý");
+
+    var phongs = new SelectList(DbContext.NvtPhongs.Where(p => p.TrangThai != "Đã thuê"), "Id", "SoPhong");
+    var khachs = new SelectList(DbContext.NvtKhachThues, "Id", "HoTen");
+}
+
+<style>
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .contract-table-row:hover {
+        background-color: rgba(79, 70, 229, 0.03);
+        transition: all 0.2s ease;
+    }
+</style>
+
+<!-- Breadcrumbs & Actions -->
+<div class="flex justify-between items-end mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Quản lý Hợp đồng</h2>
+        <p class="text-[16px] text-outline m-0 mt-1">Xem và quản lý tất cả các hợp đồng thuê nhà hiện tại.</p>
+    </div>
+    <button class="bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-[14px] flex items-center gap-2 hover:shadow-lg transition-all active:scale-95 border-0" onclick="openModal()">
+        <span class="material-symbols-outlined">add</span>
+        Tạo hợp đồng mới
+    </button>
+</div>
+
+<!-- Dashboard Stats Summary -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined">description</span>
+        </div>
+        <div>
+            <p class="text-[12px] text-outline font-medium uppercase tracking-widest m-0">Tổng hợp đồng</p>
+            <p class="text-[20px] font-bold m-0">@totalContracts</p>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+            <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+        </div>
+        <div>
+            <p class="text-[12px] text-outline font-medium uppercase tracking-widest m-0">Đang hiệu lực</p>
+            <p class="text-[20px] font-bold m-0">@activeContracts</p>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
+            <span class="material-symbols-outlined text-red-600">history</span>
+        </div>
+        <div>
+            <p class="text-[12px] text-outline font-medium uppercase tracking-widest m-0">Sắp hết hạn</p>
+            <p class="text-[20px] font-bold m-0">@expiringContracts</p>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+        <div class="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
+            <span class="material-symbols-outlined text-slate-600">archive</span>
+        </div>
+        <div>
+            <p class="text-[12px] text-outline font-medium uppercase tracking-widest m-0">Đã thanh lý</p>
+            <p class="text-[20px] font-bold m-0">@liquidatedContracts</p>
+        </div>
+    </div>
+</div>
+
+<!-- Table Section -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-10">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="bg-surface-container-low border-b border-slate-100">
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Số Phòng</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Họ Tên Khách Thuê</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Ngày Bắt Đầu</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Ngày Kết Thúc</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Tiền Cọc</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Giá Thuê</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant">Trạng Thái</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant text-right">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @foreach (var item in Model) {
+                    var nameParts = (item.KhachThue?.HoTen ?? "A").Trim().Split(' ');
+                    var initials = nameParts.Length > 1 
+                        ? (nameParts[nameParts.Length - 2][0].ToString() + nameParts[nameParts.Length - 1][0].ToString()).ToUpper() 
+                        : nameParts[0][0].ToString().ToUpper();
+                    
+                    var statusClass = item.TrangThai == "Hiệu lực" ? "bg-emerald-100 text-emerald-800" : 
+                                      item.TrangThai == "Hết hạn" ? "bg-red-100 text-red-800" : 
+                                      "bg-slate-100 text-slate-500";
+
+                    <tr class="contract-table-row">
+                        <td class="px-6 py-4 text-[16px] font-bold text-primary">@(item.Phong != null ? "P." + item.Phong.SoPhong : "N/A")</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[12px] font-bold text-slate-600 shrink-0">@initials</div>
+                                <span class="text-[14px] font-semibold">@item.KhachThue?.HoTen</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-[14px] text-on-surface-variant">@item.NgayBatDau.ToString("dd/MM/yyyy")</td>
+                        <td class="px-6 py-4 text-[14px] text-on-surface-variant">@item.NgayKetThuc.ToString("dd/MM/yyyy")</td>
+                        <td class="px-6 py-4 text-[14px] font-medium">@item.TienCoc.ToString("N0")₫</td>
+                        <td class="px-6 py-4 text-[14px] font-medium text-primary">@item.GiaThueThucTe.ToString("N0")₫</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium @statusClass">
+                                @item.TrangThai
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="@Url.Action("Details", new { id = item.Id })" class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-blue-500 transition-colors text-decoration-none border-0 bg-transparent flex items-center justify-center" title="Xem chi tiết">
+                                    <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                </a>
+                                <a href="@Url.Action("Edit", new { id = item.Id })" class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-primary transition-colors text-decoration-none border-0 bg-transparent flex items-center justify-center" title="Chỉnh sửa">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hợp đồng này không?');">
+                                    <button type="submit" class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-error transition-colors text-decoration-none border-0 bg-transparent flex items-center justify-center cursor-pointer">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                
+                @if(!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="px-6 py-10 text-center text-outline text-[14px]">
+                            Chưa có hợp đồng nào. Hãy bấm "Tạo hợp đồng mới" để bắt đầu.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    @if(Model.Any())
+    {
+        <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+            <p class="text-[14px] text-outline m-0">Hiển thị 1-@Model.Count() trên @totalContracts hợp đồng</p>
+            <div class="flex gap-2">
+                <button class="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 border-0 bg-transparent" disabled>
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors border-0 bg-transparent">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Create New Contract Modal -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="contractModal">
+    <div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-low">
+            <h3 class="text-[24px] font-bold text-on-surface m-0">Tạo Hợp Đồng Mới</h3>
+            <button class="h-10 w-10 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-500 transition-colors border-0 bg-transparent" onclick="closeModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form action="@Url.Action("Create")" method="post" class="p-8 space-y-6 m-0" id="add-contract-form">
+            @Html.AntiForgeryToken()
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Room Selection -->
+                <div class="space-y-2">
+                    <label class="block text-[14px] font-bold text-on-surface-variant mb-1">Số Phòng</label>
+                    <div class="relative">
+                        <select name="PhongId" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none outline-none shadow-none" required>
+                            <option value="">Chọn phòng trống...</option>
+                            @foreach (var p in phongs)
+                            {
+                                <option value="@p.Value">Phòng @p.Text</option>
+                            }
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                    </div>
+                </div>
+                <!-- Tenant Selection -->
+                <div class="space-y-2">
+                    <label class="block text-[14px] font-bold text-on-surface-variant mb-1">Khách Thuê</label>
+                    <div class="relative">
+                        <select name="KhachThueId" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none outline-none shadow-none" required>
+                            <option value="">Chọn khách hàng...</option>
+                            @foreach (var k in khachs)
+                            {
+                                <option value="@k.Value">@k.Text</option>
+                            }
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                    </div>
+                </div>
+                <!-- Start Date -->
+                <div class="space-y-2">
+                    <label class="block text-[14px] font-bold text-on-surface-variant mb-1">Ngày Bắt Đầu</label>
+                    <input name="NgayBatDau" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none shadow-none" type="date" required value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+                </div>
+                <!-- End Date -->
+                <div class="space-y-2">
+                    <label class="block text-[14px] font-bold text-on-surface-variant mb-1">Ngày Kết Thúc</label>
+                    <input name="NgayKetThuc" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none shadow-none" type="date" required value="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")"/>
+                </div>
+                <!-- Security Deposit -->
+                <div class="space-y-2">
+                    <label class="block text-[14px] font-bold text-on-surface-variant mb-1">Tiền Cọc (VNĐ)</label>
+                    <div class="relative">
+                        <input name="TienCoc" class="w-full pl-4 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none shadow-none" placeholder="5000000" type="number" required/>
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-outline font-medium">₫</span>
+                    </div>
+                </div>
+                <!-- Actual Rent -->
+                <div class="space-y-2">
+                    <label class="block text-[14px] font-bold text-on-surface-variant mb-1">Giá Thuê Thực Tế (VNĐ)</label>
+                    <div class="relative">
+                        <input name="GiaThueThucTe" class="w-full pl-4 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none shadow-none" placeholder="4500000" type="number" required/>
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-outline font-medium">₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-6 flex gap-4 border-t border-slate-100">
+                <button class="flex-1 px-6 py-3 border border-slate-200 text-on-surface rounded-xl text-[14px] font-bold hover:bg-slate-50 transition-colors bg-transparent" onclick="closeModal()" type="button">
+                    Hủy bỏ
+                </button>
+                <button class="flex-1 px-6 py-3 bg-primary text-on-primary rounded-xl text-[14px] font-bold hover:shadow-lg transition-all active:scale-95 border-0" type="submit">
+                    Lưu Hợp Đồng
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modal = document.getElementById('contractModal');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        document.getElementById('add-contract-form')?.addEventListener('submit', function(e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = 'Đang lưu...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+        });
+    </script>
+}

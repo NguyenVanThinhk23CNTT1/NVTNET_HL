@@ -1,0 +1,230 @@
+@model IEnumerable<NvtHouseManagement.Models.NvtKhachThue>
+
+@{
+    ViewData["Title"] = "Quản Lý Khách Thuê";
+    var totalTenants = Model.Count();
+    var activeTenants = Model.Count(k => k.NvtHopDongs.Any(h => h.TrangThai == "Hiệu lực"));
+    var newTenants = Model.Count(k => k.NvtHopDongs.Any(h => h.TrangThai == "Hiệu lực" && h.NgayBatDau.Month == DateTime.Now.Month && h.NgayBatDau.Year == DateTime.Now.Year));
+    var awayTenants = totalTenants - activeTenants;
+}
+
+<style>
+    .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    .modal-overlay { transition: opacity 0.3s ease; }
+    .modal-content { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+</style>
+
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Quản Lý Khách Thuê</h2>
+        <p class="text-[14px] text-on-surface-variant m-0 mt-1">Quản lý danh sách, hồ sơ và thông tin liên lạc của tất cả khách thuê tại hệ thống.</p>
+    </div>
+    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg font-semibold hover:opacity-90 transition-all shadow-md active:scale-[0.98] border-0" onclick="toggleModal('tenant-modal', true)">
+        <span class="material-symbols-outlined">person_add</span>
+        <span>Thêm Khách Thuê</span>
+    </button>
+</div>
+
+<!-- Stats Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl border border-white/30 shadow-sm flex flex-col gap-1 group hover:border-primary/30 transition-all">
+        <span class="text-outline text-xs font-bold uppercase tracking-widest mb-0">Tổng số</span>
+        <div class="flex items-end gap-2">
+            <span class="text-3xl font-bold text-on-surface m-0">@totalTenants</span>
+            <span class="text-teal-600 text-sm font-medium pb-1 flex items-center mb-0"><span class="material-symbols-outlined text-sm">trending_up</span> +3%</span>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-white/30 shadow-sm flex flex-col gap-1 group hover:border-primary/30 transition-all">
+        <span class="text-outline text-xs font-bold uppercase tracking-widest mb-0">Đang ở</span>
+        <div class="flex items-end gap-2">
+            <span class="text-3xl font-bold text-on-surface m-0">@activeTenants</span>
+            <span class="bg-teal-100 text-teal-700 text-[10px] px-2 py-0.5 rounded-full font-bold mb-2">ỔN ĐỊNH</span>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-white/30 shadow-sm flex flex-col gap-1 group hover:border-primary/30 transition-all">
+        <span class="text-outline text-xs font-bold uppercase tracking-widest mb-0">Mới đến</span>
+        <div class="flex items-end gap-2">
+            <span class="text-3xl font-bold text-on-surface m-0">@newTenants</span>
+            <span class="text-primary text-sm font-medium pb-1 mb-0">Tháng này</span>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-white/30 shadow-sm flex flex-col gap-1 group hover:border-primary/30 transition-all">
+        <span class="text-outline text-xs font-bold uppercase tracking-widest mb-0">Tạm vắng / Trống</span>
+        <div class="flex items-end gap-2">
+            <span class="text-3xl font-bold text-on-surface m-0">@awayTenants</span>
+            <span class="bg-amber-100 text-amber-700 text-[10px] px-2 py-0.5 rounded-full font-bold mb-2">CẦN LƯU Ý</span>
+        </div>
+    </div>
+</div>
+
+<!-- Main Data Table Container -->
+<div class="bg-white rounded-xl border border-white/30 shadow-sm overflow-hidden flex flex-col mb-10">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="bg-surface-container-low/50">
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant border-b border-surface-container">Họ Tên</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant border-b border-surface-container">CCCD</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant border-b border-surface-container">Số Điện Thoại</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant border-b border-surface-container">Email</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant border-b border-surface-container">Quê Quán</th>
+                    <th class="px-6 py-4 text-[14px] font-bold text-on-surface-variant border-b border-surface-container text-right">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-container">
+                @foreach (var item in Model) {
+                    var nameParts = (item.HoTen ?? "A").Trim().Split(' ');
+                    var initials = nameParts.Length > 1 
+                        ? (nameParts[nameParts.Length - 2][0].ToString() + nameParts[nameParts.Length - 1][0].ToString()).ToUpper() 
+                        : nameParts[0][0].ToString().ToUpper();
+                    
+                    <tr class="hover:bg-surface-container-lowest transition-colors">
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-[11px] shrink-0">@initials</div>
+                                <span class="text-[14px] font-semibold text-on-surface">@item.HoTen</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5 text-[14px] text-on-surface-variant">@item.Cccd</td>
+                        <td class="px-6 py-5 text-[14px] text-on-surface-variant">@item.SoDienThoai</td>
+                        <td class="px-6 py-5 text-[14px] text-on-surface-variant">@item.Email</td>
+                        <td class="px-6 py-5 text-[14px] text-on-surface-variant">@item.QueQuan</td>
+                        <td class="px-6 py-5 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="@Url.Action("Details", new { id = item.Id })" class="p-2 text-outline hover:text-blue-500 hover:bg-blue-500/10 rounded-full transition-all text-decoration-none border-0 bg-transparent flex items-center justify-center" title="Xem chi tiết">
+                                    <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                </a>
+                                <a href="@Url.Action("Edit", new { id = item.Id })" class="p-2 text-outline hover:text-primary hover:bg-primary/10 rounded-full transition-all text-decoration-none border-0 bg-transparent flex items-center justify-center" title="Chỉnh sửa">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách thuê này? Hành động này có thể ảnh hưởng đến hợp đồng hiện tại.');">
+                                    <button type="submit" class="p-2 text-outline hover:text-error hover:bg-error/10 rounded-full transition-all text-decoration-none border-0 bg-transparent flex items-center justify-center cursor-pointer">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                
+                @if(!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-outline text-[14px]">
+                            Chưa có khách thuê nào. Hãy bấm "Thêm Khách Thuê" để bắt đầu.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    @if(Model.Any())
+    {
+        <!-- Table Pagination -->
+        <div class="px-6 py-4 flex items-center justify-between bg-surface-container-lowest border-t border-surface-container">
+            <p class="text-xs font-medium text-outline m-0">Hiển thị 1-@Model.Count() của @totalTenants khách thuê</p>
+            <div class="flex gap-2">
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-surface-container hover:bg-surface-container-low text-outline transition-all disabled:opacity-50 border-0 bg-transparent" disabled>
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-bold text-xs transition-all border-0">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-surface-container hover:bg-surface-container-low text-on-surface font-medium text-xs transition-all border-0 bg-transparent">2</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-surface-container hover:bg-surface-container-low text-outline transition-all border-0 bg-transparent">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal Form: Add Tenant -->
+<div class="fixed inset-0 z-[60] hidden" id="tenant-modal">
+    <!-- Backdrop -->
+    <div class="modal-overlay absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" onclick="toggleModal('tenant-modal', false)"></div>
+    <!-- Content Container -->
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="modal-content relative bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 bg-surface-container-lowest border-b border-surface-container flex items-center justify-between">
+                <h3 class="text-[20px] font-bold text-on-surface m-0">Thêm Khách Thuê Mới</h3>
+                <button type="button" class="border-0 bg-transparent p-2 hover:bg-surface-container-high rounded-full transition-all text-outline flex items-center justify-center" onclick="toggleModal('tenant-modal', false)">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <form action="@Url.Action("Create")" method="post" class="p-6 space-y-4 m-0" id="add-tenant-form">
+                @Html.AntiForgeryToken()
+                <div class="space-y-1">
+                    <label class="block text-[13px] font-semibold text-on-surface-variant mb-1">Họ Tên <span class="text-error">*</span></label>
+                    <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] outline-none shadow-none" name="HoTen" placeholder="Nhập đầy đủ họ và tên" required type="text"/>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="block text-[13px] font-semibold text-on-surface-variant mb-1">CCCD <span class="text-error">*</span></label>
+                        <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] outline-none shadow-none" name="Cccd" placeholder="Số CMND/CCCD" required type="text"/>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-[13px] font-semibold text-on-surface-variant mb-1">Số Điện Thoại <span class="text-error">*</span></label>
+                        <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] outline-none shadow-none" name="SoDienThoai" placeholder="09xx xxx xxx" required type="tel"/>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-[13px] font-semibold text-on-surface-variant mb-1">Email</label>
+                    <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] outline-none shadow-none" name="Email" placeholder="example@email.com" type="email"/>
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-[13px] font-semibold text-on-surface-variant mb-1">Quê Quán</label>
+                    <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] outline-none shadow-none" name="QueQuan" placeholder="Tỉnh/Thành phố" type="text"/>
+                </div>
+                
+                <!-- UserId (nullable) is not mandatory, but if required we can put a hidden input or let controller handle it -->
+                <input type="hidden" name="UserId" value="" />
+
+                <div class="pt-4 flex gap-3">
+                    <button class="flex-1 py-2.5 border border-outline-variant text-on-surface font-semibold rounded-lg hover:bg-surface-container-low transition-all bg-transparent" onclick="toggleModal('tenant-modal', false)" type="button">Hủy bỏ</button>
+                    <button class="flex-1 py-2.5 bg-primary text-on-primary font-semibold rounded-lg hover:opacity-90 transition-all shadow-md active:scale-[0.98] border-0" type="submit">Lưu Thông Tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleModal(id, show) {
+            const modal = document.getElementById(id);
+            const overlay = modal.querySelector('.modal-overlay');
+            const content = modal.querySelector('.modal-content');
+
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    overlay.classList.add('opacity-100');
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        // Let the form submit naturally to trigger backend ASP.NET Create action
+        document.getElementById('add-tenant-form')?.addEventListener('submit', function(e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = 'Đang lưu...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+        });
+    </script>
+}

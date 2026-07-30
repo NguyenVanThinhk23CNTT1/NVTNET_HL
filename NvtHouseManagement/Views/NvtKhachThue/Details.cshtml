@@ -1,0 +1,105 @@
+@model NvtHouseManagement.Models.NvtKhachThue
+
+@{
+    ViewData["Title"] = "Chi tiết Khách Thuê";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Chi Tiết Khách Thuê</h2>
+        <nav class="flex text-on-surface-variant text-[14px] font-medium m-0 mt-1">
+            <a href="@Url.Action("Index", "Home")" class="text-on-surface-variant hover:text-primary text-decoration-none">Dashboard</a>
+            <span class="mx-2">/</span>
+            <a href="@Url.Action("Index", "NvtKhachThue")" class="text-on-surface-variant hover:text-primary text-decoration-none">Quản lý Khách Thuê</a>
+            <span class="mx-2">/</span>
+            <span class="text-primary font-bold">@Model.HoTen</span>
+        </nav>
+    </div>
+    
+    <div class="flex gap-3">
+        <a href="@Url.Action("Edit", new { id = Model.Id })" class="px-6 py-3 bg-primary text-white rounded-lg text-[14px] font-bold hover:bg-primary-container transition-all shadow-md text-decoration-none flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+            Chỉnh sửa hồ sơ
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Main Info -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-lowest">
+                <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">person</span>
+                    Thông tin cá nhân
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-6 mb-8">
+                    <div class="w-20 h-20 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[36px] font-bold shrink-0">
+                        @Model.HoTen.Substring(0, 1).ToUpper()
+                    </div>
+                    <div>
+                        <h4 class="text-[24px] font-bold text-on-surface m-0">@Model.HoTen</h4>
+                        <p class="text-on-surface-variant text-[14px] m-0 mt-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px]">branding_watermark</span>
+                            CCCD: <strong>@Model.Cccd</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Số điện thoại</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">call</span>
+                            @Model.SoDienThoai
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Email liên hệ</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">mail</span>
+                            @(string.IsNullOrEmpty(Model.Email) ? "Chưa cập nhật" : Model.Email)
+                        </p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Quê quán / Địa chỉ</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+                            @(string.IsNullOrEmpty(Model.QueQuan) ? "Chưa cập nhật" : Model.QueQuan)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Sidebar / Actions -->
+    <div class="space-y-6">
+        <div class="bg-surface-container-low rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-[16px] font-bold text-on-surface mb-4 m-0 uppercase tracking-wider text-center">Tài khoản & Hệ thống</h3>
+            
+            <div class="mb-6">
+                <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">ID Liên kết</p>
+                <div class="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-outline">account_circle</span>
+                    <span class="text-[14px] font-semibold text-on-surface">@(string.IsNullOrEmpty(Model.UserId) ? "Chưa liên kết tài khoản" : Model.UserId)</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <a href="@Url.Action("Index")" class="w-full py-3 bg-white text-on-surface font-bold text-[14px] rounded-lg border border-slate-200 hover:bg-slate-50 transition-all text-center text-decoration-none">
+                    Quay lại danh sách
+                </a>
+                
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách thuê này không? Việc này có thể ảnh hưởng đến hợp đồng.');">
+                    <button type="submit" class="w-full py-3 bg-error/10 text-error font-bold text-[14px] rounded-lg border border-transparent hover:bg-error/20 transition-all cursor-pointer flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">person_remove</span>
+                        Xóa Khách Thuê
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

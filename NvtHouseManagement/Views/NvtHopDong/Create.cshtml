@@ -1,0 +1,56 @@
+@model NvtHouseManagement.Models.NvtHopDong
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>NvtHopDong</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <div class="form-group">
+                <label asp-for="PhongId" class="control-label"></label>
+                <select asp-for="PhongId" class ="form-control" asp-items="ViewBag.PhongId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="KhachThueId" class="control-label"></label>
+                <select asp-for="KhachThueId" class ="form-control" asp-items="ViewBag.KhachThueId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NgayBatDau" class="control-label"></label>
+                <input asp-for="NgayBatDau" class="form-control" />
+                <span asp-validation-for="NgayBatDau" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NgayKetThuc" class="control-label"></label>
+                <input asp-for="NgayKetThuc" class="form-control" />
+                <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TienCoc" class="control-label"></label>
+                <input asp-for="TienCoc" class="form-control" />
+                <span asp-validation-for="TienCoc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GiaThueThucTe" class="control-label"></label>
+                <input asp-for="GiaThueThucTe" class="form-control" />
+                <span asp-validation-for="GiaThueThucTe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

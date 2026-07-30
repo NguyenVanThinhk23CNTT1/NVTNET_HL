@@ -1,0 +1,127 @@
+@model NvtHouseManagement.Models.NvtHopDong
+
+@{
+    ViewData["Title"] = "Chi tiết Hợp Đồng";
+    var statusClass = Model.TrangThai == "Hiệu lực" ? "bg-emerald-100 text-emerald-800" : 
+                      Model.TrangThai == "Hết hạn" ? "bg-red-100 text-red-800" : 
+                      "bg-slate-100 text-slate-500";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Chi Tiết Hợp Đồng #@Model.Id</h2>
+        <nav class="flex text-on-surface-variant text-[14px] font-medium m-0 mt-1">
+            <a href="@Url.Action("Index", "Home")" class="text-on-surface-variant hover:text-primary text-decoration-none">Dashboard</a>
+            <span class="mx-2">/</span>
+            <a href="@Url.Action("Index", "NvtHopDong")" class="text-on-surface-variant hover:text-primary text-decoration-none">Quản lý Hợp Đồng</a>
+            <span class="mx-2">/</span>
+            <span class="text-primary font-bold">HD-@Model.Id</span>
+        </nav>
+    </div>
+    
+    <div class="flex gap-3">
+        <a href="@Url.Action("Edit", new { id = Model.Id })" class="px-6 py-3 bg-primary text-white rounded-lg text-[14px] font-bold hover:bg-primary-container transition-all shadow-md text-decoration-none flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+            Chỉnh sửa hợp đồng
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Main Info -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-lowest">
+                <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">description</span>
+                    Thông tin Hợp đồng
+                </h3>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-tight @statusClass">
+                    @Model.TrangThai
+                </span>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Ngày Bắt Đầu</p>
+                        <p class="text-[16px] font-semibold text-on-surface m-0">@Model.NgayBatDau.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Ngày Kết Thúc</p>
+                        <p class="text-[16px] font-semibold text-error m-0">@Model.NgayKetThuc.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Tiền Cọc Thu Nhận</p>
+                        <p class="text-[18px] font-bold text-secondary m-0">@Model.TienCoc.ToString("N0") VNĐ</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Giá Thuê Mỗi Tháng</p>
+                        <p class="text-[18px] font-bold text-primary m-0">@Model.GiaThueThucTe.ToString("N0") VNĐ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        @if(Model.KhachThue != null) {
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-surface-container-lowest">
+                <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary">person</span>
+                    Người đứng tên hợp đồng
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-6">
+                    <div class="w-16 h-16 rounded-full bg-secondary/10 text-secondary flex items-center justify-center text-[28px] font-bold shrink-0">
+                        @Model.KhachThue.HoTen.Substring(0, 1).ToUpper()
+                    </div>
+                    <div>
+                        <h4 class="text-[20px] font-bold text-on-surface m-0">@Model.KhachThue.HoTen</h4>
+                        <p class="text-on-surface-variant text-[14px] m-0 mt-1 flex items-center gap-4">
+                            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">branding_watermark</span> @Model.KhachThue.Cccd</span>
+                            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">call</span> @Model.KhachThue.SoDienThoai</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Right Column: Sidebar / Actions -->
+    <div class="space-y-6">
+        @if (Model.Phong != null) {
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                <h3 class="text-[16px] font-bold text-on-surface mb-4 m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">meeting_room</span>
+                    Chi tiết Phòng
+                </h3>
+                <div class="text-center py-4 bg-surface-container-low rounded-xl mb-4">
+                    <p class="text-[12px] font-bold text-on-surface-variant uppercase m-0">SỐ PHÒNG</p>
+                    <p class="text-[36px] font-black text-primary m-0">@Model.Phong.SoPhong</p>
+                </div>
+                <div class="flex justify-between items-center text-[14px] py-2 border-b border-slate-100">
+                    <span class="text-on-surface-variant font-medium">Vị trí</span>
+                    <span class="font-bold text-on-surface">Tầng @Model.Phong.Tang</span>
+                </div>
+            </div>
+        }
+
+        <div class="bg-surface-container-low rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-[16px] font-bold text-on-surface mb-4 m-0 uppercase tracking-wider text-center">Thao tác</h3>
+            
+            <div class="flex flex-col gap-3">
+                <a href="@Url.Action("Index")" class="w-full py-3 bg-white text-on-surface font-bold text-[14px] rounded-lg border border-slate-200 hover:bg-slate-50 transition-all text-center text-decoration-none">
+                    Về danh sách
+                </a>
+                
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="m-0" onsubmit="return confirm('Hủy hợp đồng sẽ giải phóng phòng trống (Đã thanh lý). Bạn có chắc chắn?');">
+                    <button type="submit" class="w-full py-3 bg-error/10 text-error font-bold text-[14px] rounded-lg border border-transparent hover:bg-error/20 transition-all cursor-pointer flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">cancel</span>
+                        Hủy Hợp Đồng
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
