@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NvtHouseManagement</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NvtHouseManagement.styles.css" asp-append-version="true" />
+    
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        corePlugins: { preflight: false },
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#f0ecf9",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed-variant": "#004395",
+                    "outline": "#777587",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-container-highest": "#e4e1ee",
+                    "surface-variant": "#e4e1ee",
+                    "background": "#fcf8ff",
+                    "inverse-on-surface": "#f3effc",
+                    "secondary": "#0058be",
+                    "on-tertiary-fixed": "#351000",
+                    "on-surface-variant": "#464555",
+                    "on-secondary": "#ffffff",
+                    "on-surface": "#1b1b24",
+                    "on-primary-fixed": "#0f0069",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#ffd2be",
+                    "surface-container-low": "#f5f2ff",
+                    "on-primary-container": "#dad7ff",
+                    "surface-bright": "#fcf8ff",
+                    "on-secondary-container": "#fefcff",
+                    "tertiary-container": "#a44100",
+                    "surface-container-high": "#eae6f4",
+                    "primary-fixed": "#e2dfff",
+                    "secondary-container": "#2170e4",
+                    "on-background": "#1b1b24",
+                    "primary-container": "#4f46e5",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#302f39",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "surface": "#fcf8ff",
+                    "on-secondary-fixed": "#001a42",
+                    "outline-variant": "#c7c4d8",
+                    "tertiary-fixed": "#ffdbcc",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#7e3000",
+                    "surface-tint": "#4d44e3",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "surface-dim": "#dcd8e5",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#c3c0ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "primary": "#3525cd",
+                    "on-tertiary": "#ffffff"
+            },
+            "fontFamily": {
+                    "body": ["Inter", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8eefc 100%);
+            min-height: 100vh;
+        }
+        .ultra-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        .stat-card-gradient-1 { background: linear-gradient(135deg, #4f46e5 0%, #3525cd 100%); }
+        .stat-card-gradient-2 { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .stat-card-gradient-3 { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .stat-card-gradient-4 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        
+        .glow-green { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .glow-amber { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+        .glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(53, 37, 205, 0.1) 0%, rgba(53, 37, 205, 0) 100%);
+            border-left: 4px solid #3525cd;
+            color: #3525cd;
+            font-weight: 600;
+        }
+        .nav-link-base {
+            text-decoration: none;
+        }
+        .nav-link-base:hover:not(.sidebar-active) {
+            background: rgba(255,255,255,0.5);
+            color: #3525cd;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body class="text-on-surface overflow-x-hidden m-0 p-0">
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-0 h-full w-[280px] ultra-glass border-r border-white/20 flex flex-col py-8 z-50 overflow-y-auto">
+        <div class="px-8 mb-10">
+            <div class="flex items-center gap-3 mb-1">
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/30">
+                    <span class="material-symbols-outlined">home_work</span>
+                </div>
+                <h1 class="font-bold text-xl tracking-tight text-primary m-0">NvtHouse</h1>
+            </div>
+            <p class="text-on-surface-variant text-[10px] uppercase font-bold tracking-[0.2em] ml-1 m-0">Management Portal</p>
+        </div>
+        
+        <nav class="flex-1 px-4 space-y-1">
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="Home" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">dashboard</span>
+                <span class="text-[15px]">Dashboard</span>
+            </a>
+            
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtPhong" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtPhong" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">meeting_room</span>
+                <span class="text-[15px]">Phòng Trọ</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtKhachThue" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtKhachThue" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">groups</span>
+                <span class="text-[15px]">Khách Thuê</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtHopDong" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtHopDong" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">history_edu</span>
+                <span class="text-[15px]">Hợp Đồng</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtDichVu" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtDichVu" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">room_service</span>
+                <span class="text-[15px]">Dịch Vụ</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtChotDienNuoc" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtChotDienNuoc" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">electric_meter</span>
+                <span class="text-[15px]">Chốt Điện Nước</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtHoaDon" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtHoaDon" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">receipt_long</span>
+                <span class="text-[15px]">Hóa Đơn</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtBaoCaoSuCo" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtBaoCaoSuCo" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">report_problem</span>
+                <span class="text-[15px]">Sự Cố</span>
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3.5 nav-link-base @(ViewContext.RouteData.Values["Controller"]?.ToString() == "NvtDayTro" ? "sidebar-active rounded-r-xl" : "text-on-surface-variant rounded-xl transition-all duration-300 group")" asp-controller="NvtDayTro" asp-action="Index">
+                <span class="material-symbols-outlined transition-transform group-hover:scale-110">domain</span>
+                <span class="text-[15px]">Dãy Trọ</span>
+            </a>
+        </nav>
+        
+        <div class="px-6 mt-auto pt-6 border-t border-white/20">
+            <div class="p-3 ultra-glass rounded-2xl border border-white/40 flex items-center gap-3 cursor-pointer hover:bg-white transition-all shadow-sm">
+                <div class="relative">
+                    <img alt="Admin Profile" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20" src="https://ui-avatars.com/api/?name=Admin+NVT&background=3525cd&color=fff"/>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+                <div class="overflow-hidden">
+                    <p class="font-bold text-sm truncate m-0">Admin NVT</p>
+                    <p class="text-on-surface-variant text-[11px] font-medium uppercase tracking-tighter m-0">Property Owner</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="fixed top-0 right-0 h-[80px] left-[280px] ultra-glass border-b border-white/20 flex justify-between items-center px-10 z-40">
+        <div class="flex items-center flex-1 max-w-xl">
+            <div class="relative w-full group">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+                <input class="w-full pl-12 pr-6 py-3 bg-white/50 border border-transparent rounded-2xl text-sm focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all outline-none" placeholder="Tìm kiếm nhanh..." type="text"/>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 px-3 py-1.5 ultra-glass rounded-full border border-white/50 text-xs font-bold text-primary shadow-sm">
+                <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                LIVE SYSTEM
+            </div>
+            <div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+            <button class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-white hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border-0 cursor-pointer">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+            </button>
+            <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-white hover:bg-primary hover:text-white transition-all duration-300 shadow-sm border-0 cursor-pointer">
+                <span class="material-symbols-outlined text-[22px]">settings</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="ml-[280px] pt-[100px] pb-12 px-10 min-h-screen">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        // Subtle Mouse parallax for glass cards
+        document.querySelectorAll('.ultra-glass').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const moveX = (x - centerX) / 80;
+                const moveY = (y - centerY) / 80;
+                
+                card.style.transform = `translateY(-4px) perspective(1000px) rotateX(${-moveY}deg) rotateY(${moveX}deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
