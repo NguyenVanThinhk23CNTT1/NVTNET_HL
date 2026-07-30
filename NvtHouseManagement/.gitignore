@@ -1,0 +1,5 @@
+bin/
+obj/
+.vs/
+auto_commit.ps1
+auto_commit2.ps1
