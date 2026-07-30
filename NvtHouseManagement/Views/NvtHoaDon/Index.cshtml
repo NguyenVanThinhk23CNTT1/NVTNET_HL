@@ -1,0 +1,295 @@
+@model IEnumerable<NvtHouseManagement.Models.NvtHoaDon>
+@{
+    ViewData["Title"] = "Quản lý Hóa đơn";
+    var currentMonth = DateTime.Now.Month;
+    var currentYear = DateTime.Now.Year;
+    
+    var monthInvoices = Model.Where(m => m.Thang == currentMonth && m.Nam == currentYear).ToList();
+    var totalInvoices = monthInvoices.Count();
+    var paidInvoices = monthInvoices.Count(m => m.TrangThai == "Đã thanh toán");
+    var unpaidInvoices = monthInvoices.Count(m => m.TrangThai != "Đã thanh toán");
+    var expectedRevenue = monthInvoices.Sum(m => m.TongTien);
+    
+    var paidPercent = totalInvoices > 0 ? (paidInvoices * 100 / totalInvoices) : 0;
+    var unpaidPercent = totalInvoices > 0 ? (unpaidInvoices * 100 / totalInvoices) : 0;
+}
+
+<style>
+    .glass-effect {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .shadow-soft {
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    @@media print {
+        .no-print { display: none !important; }
+        .print-only { display: block !important; }
+        body { background: white; }
+    }
+</style>
+
+<!-- Page Title & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Quản lý Hóa đơn</h2>
+        <p class="text-[16px] text-on-surface-variant m-0 mt-1">Theo dõi, xuất hóa đơn và quản lý trạng thái thanh toán hàng tháng.</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <a href="@Url.Action("Create", "NvtChotDienNuoc")" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg shadow-md hover:opacity-90 transition-all font-bold text-[14px] text-decoration-none border-0">
+            <span class="material-symbols-outlined">add</span>
+            Tạo hóa đơn mới
+        </a>
+    </div>
+</div>
+
+<!-- Dashboard Stats Brief -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-soft border border-white/50 space-y-2">
+        <p class="text-on-surface-variant font-medium text-[14px] m-0">Tổng hóa đơn tháng @currentMonth</p>
+        <p class="text-[24px] font-bold text-on-surface m-0">@totalInvoices</p>
+        <div class="flex items-center gap-1 text-primary text-[12px] font-bold m-0 mt-1">
+            <span class="material-symbols-outlined text-[16px]">trending_up</span>
+            <span>Thống kê tháng hiện tại</span>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-soft border border-white/50 space-y-2">
+        <p class="text-on-surface-variant font-medium text-[14px] m-0">Đã thanh toán</p>
+        <p class="text-[24px] font-bold text-green-600 m-0">@paidInvoices</p>
+        <div class="w-full bg-surface-container h-1.5 rounded-full mt-2">
+            <div class="bg-green-500 h-1.5 rounded-full" style="width: @(paidPercent)%"></div>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-soft border border-white/50 space-y-2">
+        <p class="text-on-surface-variant font-medium text-[14px] m-0">Chưa thanh toán</p>
+        <p class="text-[24px] font-bold text-amber-500 m-0">@unpaidInvoices</p>
+        <div class="w-full bg-surface-container h-1.5 rounded-full mt-2">
+            <div class="bg-amber-400 h-1.5 rounded-full" style="width: @(unpaidPercent)%"></div>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-soft border border-white/50 space-y-2">
+        <p class="text-on-surface-variant font-medium text-[14px] m-0">Doanh thu dự kiến</p>
+        <p class="text-[24px] font-bold text-primary m-0">@expectedRevenue.ToString("N0") <span class="text-[14px] font-normal">VND</span></p>
+        <div class="text-[12px] text-on-surface-variant m-0 mt-1">Tháng @currentMonth/@currentYear</div>
+    </div>
+</div>
+
+<!-- Invoice Table Card -->
+<div class="bg-white rounded-2xl shadow-soft border border-white/50 overflow-hidden mb-10">
+    <div class="p-6 border-b border-surface-container flex justify-between items-center bg-surface-container-lowest">
+        <h3 class="text-[16px] font-bold m-0">Danh sách hóa đơn</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant font-bold text-[12px] uppercase tracking-wider">
+                    <th class="px-6 py-4 border-b border-surface-container">Phòng</th>
+                    <th class="px-6 py-4 border-b border-surface-container">Khách Thuê</th>
+                    <th class="px-6 py-4 border-b border-surface-container">Kỳ cước</th>
+                    <th class="px-6 py-4 border-b border-surface-container text-right">Tiền Phòng</th>
+                    <th class="px-6 py-4 border-b border-surface-container text-right">Điện/Nước/Khác</th>
+                    <th class="px-6 py-4 border-b border-surface-container text-right">Tổng tiền</th>
+                    <th class="px-6 py-4 border-b border-surface-container text-center">Trạng thái</th>
+                    <th class="px-6 py-4 border-b border-surface-container text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-container">
+                @foreach (var item in Model.OrderByDescending(m => m.Nam).ThenByDescending(m => m.Thang)) {
+                    var isPaid = item.TrangThai == "Đã thanh toán";
+                    var statusClass = isPaid ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700";
+                    var dienNuocKhac = item.TienDien + item.TienNuoc + (item.TienDichVuKhac ?? 0);
+                    
+                    <tr class="hover:bg-surface-container-lowest transition-colors group">
+                        <td class="px-6 py-5 font-bold text-on-surface text-[14px]">@(item.HopDong?.Phong?.SoPhong ?? "N/A")</td>
+                        <td class="px-6 py-5 text-[14px]">@(item.HopDong?.KhachThue?.HoTen ?? "N/A")</td>
+                        <td class="px-6 py-5 text-[14px] text-on-surface-variant">Tháng @item.Thang, @item.Nam</td>
+                        <td class="px-6 py-5 text-right font-medium text-[14px]">@item.TienPhong.ToString("N0")</td>
+                        <td class="px-6 py-5 text-right text-on-surface-variant text-[14px]">@dienNuocKhac.ToString("N0")</td>
+                        <td class="px-6 py-5 text-right font-bold text-primary text-[14px]">@item.TongTien.ToString("N0")</td>
+                        <td class="px-6 py-5 text-center">
+                            <form asp-action="CapNhatTrangThai" method="post" class="m-0">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <select name="trangThaiMoi" class="w-[160px] px-2 py-1.5 rounded-full text-[11px] font-bold @statusClass uppercase border-0 outline-none cursor-pointer appearance-none text-center shadow-sm" onchange="this.form.submit()">
+                                    @if(item.TrangThai == "Chưa thanh toán") { <option value="Chưa thanh toán" selected>CHƯA THANH TOÁN</option> } else { <option value="Chưa thanh toán">CHƯA THANH TOÁN</option> }
+                                    @if(item.TrangThai == "Đã thanh toán") { <option value="Đã thanh toán" selected>ĐÃ THANH TOÁN</option> } else { <option value="Đã thanh toán">ĐÃ THANH TOÁN</option> }
+                                </select>
+                            </form>
+                        </td>
+                        <td class="px-6 py-5">
+                            <div class="flex items-center justify-center gap-2 transition-opacity">
+                                <a href="@Url.Action("Edit", new { id = item.Id })" class="border-0 px-3 py-1.5 bg-amber-500 text-white rounded-md font-bold text-[12px] shadow-sm hover:bg-amber-600 transition-all cursor-pointer flex items-center justify-center gap-1 text-decoration-none" title="Sửa">
+                                    <span class="material-symbols-outlined text-[16px]">edit</span> Sửa
+                                </a>
+                                <button type="button" class="border-0 px-3 py-1.5 bg-blue-500 text-white rounded-md font-bold text-[12px] shadow-sm hover:bg-blue-600 transition-all cursor-pointer flex items-center justify-center gap-1" 
+                                    onclick="openPrintModal('@(item.HopDong?.Phong?.SoPhong)', '@item.TongTien.ToString("N0")', '@item.Thang', '@item.Nam', '@(item.HopDong?.KhachThue?.HoTen)', '@item.TienPhong.ToString("N0")', '@item.TienDien.ToString("N0")', '@item.TienNuoc.ToString("N0")', '@((item.TienDichVuKhac ?? 0).ToString("N0"))', '@item.Id')" title="Xem & In">
+                                    <span class="material-symbols-outlined text-[16px]">visibility</span> Xem
+                                </button>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn hủy hóa đơn này?');">
+                                    <button type="submit" class="border-0 px-3 py-1.5 bg-red-500 text-white rounded-md font-bold text-[12px] shadow-sm hover:bg-red-600 transition-all cursor-pointer flex items-center justify-center gap-1" title="Hủy hóa đơn">
+                                        <span class="material-symbols-outlined text-[16px]">delete</span> Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                
+                @if(!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="px-6 py-10 text-center text-outline text-[14px]">
+                            Chưa có hóa đơn nào trong hệ thống.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if(Model.Any())
+    {
+        <div class="p-6 border-t border-surface-container flex justify-between items-center text-on-surface-variant text-[14px]">
+            <p class="m-0">Hiển thị 1-@Model.Count() trong số @Model.Count() hóa đơn</p>
+        </div>
+    }
+</div>
+
+<!-- Modal: View & Print Invoice -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-all no-print" id="printModal">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div class="p-4 bg-primary text-on-primary flex justify-between items-center">
+            <h4 class="text-[16px] font-bold m-0">Chi tiết hóa đơn</h4>
+            <button class="border-0 bg-transparent p-1 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center text-white cursor-pointer" onclick="closePrintModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-10 bg-white min-h-[600px] text-on-surface" id="printableArea">
+            <!-- Invoice Header -->
+            <div class="flex justify-between items-start border-b-2 border-primary/20 pb-8 mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-primary mb-1">NVT HOUSE MANAGEMENT</h2>
+                    <p class="text-[14px] m-0">Địa chỉ: 123 Đường Số 1, Quận 1, TP. HCM</p>
+                    <p class="text-[14px] m-0">Hotline: 0909 123 456</p>
+                </div>
+                <div class="text-right">
+                    <h3 class="text-xl font-bold uppercase mb-1">Phiếu thu tiền nhà</h3>
+                    <p class="text-[14px] m-0">Số HD: <span class="font-bold" id="modalInvoiceNo">HD-202310-001</span></p>
+                    <p class="text-[14px] m-0">Ngày lập: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+                </div>
+            </div>
+            <!-- Tenant Info -->
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Người thanh toán</p>
+                    <p class="font-bold text-lg m-0" id="modalTenantName">Nguyễn Văn Khách Hàng</p>
+                    <p class="text-[14px] m-0 mt-1">Phòng: <span class="font-bold" id="modalRoomNo">P.302</span></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Thông tin kỳ thanh toán</p>
+                    <p class="font-bold m-0" id="modalPeriod">Tháng 10 / 2023</p>
+                    <p class="text-[14px] italic m-0 mt-1">Hạn chót: Mùng 5 hàng tháng</p>
+                </div>
+            </div>
+            <!-- Invoice Body -->
+            <table class="w-full mb-8 border-collapse m-0">
+                <thead>
+                    <tr class="bg-surface-container border-y border-outline-variant text-[14px]">
+                        <th class="px-4 py-2 text-left">Nội dung</th>
+                        <th class="px-4 py-2 text-right">Thành tiền (VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container text-[14px]">
+                    <tr>
+                        <td class="px-4 py-3">Tiền phòng (Trọn gói tháng)</td>
+                        <td class="px-4 py-3 text-right font-medium" id="modalTienPhong">4.500.000</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3">Tiền điện</td>
+                        <td class="px-4 py-3 text-right font-medium" id="modalTienDien">342.000</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3">Tiền nước</td>
+                        <td class="px-4 py-3 text-right font-medium" id="modalTienNuoc">85.000</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-3">Phí quản lý, Rác, Dịch vụ khác</td>
+                        <td class="px-4 py-3 text-right font-medium" id="modalTienKhac">150.000</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="border-t-2 border-on-surface">
+                        <td class="px-4 py-4 text-right font-bold text-[18px]">Tổng cộng:</td>
+                        <td class="px-4 py-4 text-right font-bold text-[20px] text-primary"><span id="modalTotal">5.077.000</span></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <!-- Footer Signatures -->
+            <div class="flex justify-between mt-12 text-center">
+                <div class="w-48">
+                    <p class="font-bold mb-16 uppercase text-[14px]">Người nộp tiền</p>
+                    <p class="text-[12px] text-outline m-0">(Ký và ghi rõ họ tên)</p>
+                </div>
+                <div class="w-48">
+                    <p class="font-bold mb-16 uppercase text-[14px]">Người lập phiếu</p>
+                    <p class="text-[12px] text-outline italic m-0">Đã xác nhận</p>
+                    <p class="font-bold m-0">NVT Admin</p>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 bg-surface-container border-t border-outline-variant flex justify-end gap-3 no-print">
+            <button class="px-6 py-2.5 border border-outline-variant bg-transparent text-on-surface rounded-lg hover:bg-white transition-all font-medium cursor-pointer" onclick="closePrintModal()">Đóng</button>
+            <button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg shadow-md hover:bg-primary-container transition-all font-bold border-0 cursor-pointer" onclick="printInvoice()">
+                <span class="material-symbols-outlined">print</span>
+                In hóa đơn
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openPrintModal(room, total, thang, nam, tenant, tienPhong, tienDien, tienNuoc, tienKhac, id) {
+            document.getElementById('modalRoomNo').innerText = room;
+            document.getElementById('modalTotal').innerText = total;
+            document.getElementById('modalTenantName').innerText = tenant;
+            document.getElementById('modalPeriod').innerText = `Tháng ${thang} / ${nam}`;
+            document.getElementById('modalTienPhong').innerText = tienPhong;
+            document.getElementById('modalTienDien').innerText = tienDien;
+            document.getElementById('modalTienNuoc').innerText = tienNuoc;
+            document.getElementById('modalTienKhac').innerText = tienKhac;
+            document.getElementById('modalInvoiceNo').innerText = 'HD-' + nam + thang.toString().padStart(2, '0') + '-' + id.toString().padStart(4, '0');
+            
+            const modal = document.getElementById('printModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePrintModal() {
+            const modal = document.getElementById('printModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        function printInvoice() {
+            var printContents = document.getElementById('printableArea').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            window.location.reload(); 
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePrintModal();
+        });
+
+        document.getElementById('printModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('printModal')) closePrintModal();
+        });
+    </script>
+}

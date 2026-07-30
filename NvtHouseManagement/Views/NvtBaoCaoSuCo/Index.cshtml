@@ -1,0 +1,221 @@
+@using Microsoft.EntityFrameworkCore
+@inject NvtHouseManagement.Models.NvtDbContext DbContext
+@model IEnumerable<NvtHouseManagement.Models.NvtBaoCaoSuCo>
+
+@{
+    ViewData["Title"] = "Báo Cáo Sự Cố";
+    
+    var currentMonth = DateTime.Now.Month;
+    var currentYear = DateTime.Now.Year;
+    var thisMonthReports = Model.Where(m => m.NgayTao?.Month == currentMonth && m.NgayTao?.Year == currentYear).Count();
+    
+    var pending = Model.Count(m => m.TrangThai == "Chờ xử lý" || m.TrangThai == "Mới tiếp nhận");
+    var fixing = Model.Count(m => m.TrangThai == "Đang sửa");
+    var completed = Model.Count(m => m.TrangThai == "Hoàn thành" || m.TrangThai == "Đã sửa");
+
+    var activeRooms = new SelectList(DbContext.NvtPhongs.Where(p => p.TrangThai == "Đã thuê"), "Id", "SoPhong");
+}
+
+<style>
+    .glass-effect {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .custom-shadow {
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+</style>
+
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Báo Cáo Sự Cố & Khiếu Nại</h2>
+        <p class="text-[16px] text-on-surface-variant mt-1 m-0">Quản lý và theo dõi các vấn đề kỹ thuật từ người thuê.</p>
+    </div>
+    <button class="flex items-center gap-2 bg-primary text-on-primary px-6 py-2.5 rounded-lg hover:opacity-90 transition-all shadow-md font-bold text-[14px] border-0 cursor-pointer" onclick="openModal()">
+        <span class="material-symbols-outlined">add</span>
+        Báo cáo sự cố mới
+    </button>
+</div>
+
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl custom-shadow border border-slate-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-error-container/20 flex items-center justify-center text-error shrink-0">
+            <span class="material-symbols-outlined">report</span>
+        </div>
+        <div>
+            <p class="text-[12px] font-bold text-outline uppercase tracking-wider m-0">Chờ xử lý</p>
+            <p class="text-[24px] font-bold m-0">@pending</p>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl custom-shadow border border-slate-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary shrink-0">
+            <span class="material-symbols-outlined">build</span>
+        </div>
+        <div>
+            <p class="text-[12px] font-bold text-outline uppercase tracking-wider m-0">Đang sửa</p>
+            <p class="text-[24px] font-bold m-0">@fixing</p>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl custom-shadow border border-slate-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+            <span class="material-symbols-outlined">check_circle</span>
+        </div>
+        <div>
+            <p class="text-[12px] font-bold text-outline uppercase tracking-wider m-0">Hoàn thành</p>
+            <p class="text-[24px] font-bold m-0">@completed</p>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl custom-shadow border border-slate-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined">calendar_today</span>
+        </div>
+        <div>
+            <p class="text-[12px] font-bold text-outline uppercase tracking-wider m-0">Tháng này</p>
+            <p class="text-[24px] font-bold m-0">@thisMonthReports</p>
+        </div>
+    </div>
+</div>
+
+<!-- Main Table Container -->
+<div class="bg-white rounded-xl custom-shadow border border-slate-100 overflow-hidden mb-10">
+    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-lowest">
+        <h3 class="text-[16px] font-bold text-on-surface m-0">Danh sách sự cố gần đây</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left m-0">
+            <thead class="bg-surface-container-low text-on-surface-variant border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 text-[12px] font-bold uppercase tracking-wider border-b border-surface-container">Số Phòng</th>
+                    <th class="px-6 py-4 text-[12px] font-bold uppercase tracking-wider border-b border-surface-container">Tiêu Đề</th>
+                    <th class="px-6 py-4 text-[12px] font-bold uppercase tracking-wider border-b border-surface-container">Mô Tả</th>
+                    <th class="px-6 py-4 text-[12px] font-bold uppercase tracking-wider border-b border-surface-container">Ngày Báo</th>
+                    <th class="px-6 py-4 text-[12px] font-bold uppercase tracking-wider border-b border-surface-container">Trạng Thái</th>
+                    <th class="px-6 py-4 text-[12px] font-bold uppercase tracking-wider border-b border-surface-container text-right">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @foreach(var item in Model) {
+                    var statusClass = item.TrangThai == "Hoàn thành" || item.TrangThai == "Đã sửa" ? "bg-green-100 text-green-600" : 
+                                      item.TrangThai == "Đang sửa" ? "bg-blue-100 text-blue-600" : 
+                                      "bg-rose-100 text-rose-600";
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="text-[16px] font-bold text-primary">P.@(item.Phong?.SoPhong ?? "")</span>
+                        </td>
+                        <td class="px-6 py-4 font-bold text-on-surface text-[14px]">@item.TieuDe</td>
+                        <td class="px-6 py-4 text-on-surface-variant max-w-xs truncate text-[14px]" title="@item.NoiDung">@item.NoiDung</td>
+                        <td class="px-6 py-4 text-on-surface-variant text-[14px]">@item.NgayTao?.ToString("dd/MM/yyyy")</td>
+                        <td class="px-6 py-4">
+                            <form asp-action="CapNhatTrangThai" method="post" class="m-0">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <select name="trangThaiMoi" class="w-[120px] px-2 py-1.5 rounded-full text-[12px] font-bold @statusClass border-0 outline-none cursor-pointer appearance-none text-center shadow-sm" onchange="this.form.submit()">
+                                    @if(item.TrangThai == "Chờ xử lý" || item.TrangThai == "Mới tiếp nhận") { <option value="Chờ xử lý" selected>Chờ xử lý</option> } else { <option value="Chờ xử lý">Chờ xử lý</option> }
+                                    @if(item.TrangThai == "Đang sửa") { <option value="Đang sửa" selected>Đang sửa</option> } else { <option value="Đang sửa">Đang sửa</option> }
+                                    @if(item.TrangThai == "Hoàn thành" || item.TrangThai == "Đã sửa") { <option value="Hoàn thành" selected>Hoàn thành</option> } else { <option value="Hoàn thành">Hoàn thành</option> }
+                                </select>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="@Url.Action("Edit", new { id = item.Id })" class="px-3 py-1.5 bg-amber-500 text-white rounded-md font-bold text-[12px] hover:bg-amber-600 transition-all text-decoration-none border-0 flex items-center justify-center gap-1 shadow-sm" title="Sửa">
+                                    <span class="material-symbols-outlined text-[16px]">edit</span>
+                                    Sửa
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa báo cáo này?');">
+                                    <button type="submit" class="px-3 py-1.5 bg-red-500 text-white rounded-md font-bold text-[12px] hover:bg-red-600 transition-all text-decoration-none border-0 flex items-center justify-center gap-1 shadow-sm cursor-pointer" title="Xóa">
+                                        <span class="material-symbols-outlined text-[16px]">delete</span>
+                                        Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                @if(!Model.Any()) {
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-outline text-[14px]">
+                            Hiện chưa có báo cáo sự cố nào.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if(Model.Any()) {
+        <div class="p-6 bg-surface-container-low border-t border-slate-100 flex items-center justify-between">
+            <p class="text-[12px] font-bold text-outline m-0">Hiển thị 1-@Model.Count() trên @Model.Count() báo cáo</p>
+        </div>
+    }
+</div>
+
+<!-- Modal Form: Report New Issue -->
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" id="modalOverlay">
+    <div class="bg-white w-full max-w-lg mx-4 rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300" id="modalContent">
+        <div class="px-6 py-4 bg-primary flex justify-between items-center text-on-primary">
+            <h3 class="text-[20px] font-bold m-0 text-white">Báo cáo sự cố mới</h3>
+            <button class="border-0 bg-transparent hover:bg-white/10 rounded-full p-1 transition-all flex items-center cursor-pointer text-white" onclick="closeModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form asp-action="Create" method="post" class="p-6 space-y-5 m-0" id="issueForm">
+            @Html.AntiForgeryToken()
+            <div>
+                <label class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Số Phòng</label>
+                <select name="PhongId" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 outline-none" required>
+                    <option value="">Chọn phòng...</option>
+                    @foreach(var r in activeRooms) {
+                        <option value="@r.Value">Phòng @r.Text</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Tiêu đề sự cố</label>
+                <input name="TieuDe" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 outline-none" placeholder="Vd: Hỏng hóc thiết bị, mất điện..." type="text" required/>
+            </div>
+            <div>
+                <label class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Mô tả chi tiết</label>
+                <textarea name="NoiDung" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 resize-none outline-none" placeholder="Nhập chi tiết tình trạng sự cố để kỹ thuật viên nắm bắt..." rows="4" required></textarea>
+            </div>
+            <div class="pt-4 flex gap-4">
+                <button class="flex-1 py-3 text-primary font-bold text-[14px] hover:bg-slate-50 transition-all rounded-lg border border-primary/20 bg-transparent cursor-pointer" onclick="closeModal()" type="button">
+                    Hủy bỏ
+                </button>
+                <button class="flex-1 py-3 bg-primary text-on-primary font-bold text-[14px] hover:opacity-90 transition-all rounded-lg shadow-md border-0 cursor-pointer" type="submit">
+                    Gửi báo cáo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+
+        function openModal() {
+            modalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+        
+        document.getElementById('issueForm')?.addEventListener('submit', function(e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = 'Đang gửi...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+        });
+    </script>
+}

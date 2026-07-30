@@ -1,0 +1,85 @@
+@model NvtHouseManagement.Models.NvtBaoCaoSuCo
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Sự Cố";
+}
+
+<div class="max-w-3xl mx-auto my-8 mt-2">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h2 class="text-[28px] font-bold text-on-surface m-0">Chỉnh sửa Sự Cố</h2>
+            <p class="text-[16px] text-on-surface-variant m-0 mt-1">Cập nhật thông tin chi tiết của báo cáo sự cố.</p>
+        </div>
+        <a asp-action="Index" class="flex items-center gap-2 px-4 py-2 bg-surface-container-high text-on-surface rounded-lg hover:bg-surface-container-highest transition-all font-medium text-decoration-none border-0">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            Trở về danh sách
+        </a>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-6 border-b border-slate-100 bg-surface-container-lowest flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                <span class="material-symbols-outlined">edit_square</span>
+            </div>
+            <div>
+                <h3 class="text-[18px] font-bold text-on-surface m-0">Chi tiết sự cố</h3>
+                <p class="text-[14px] text-on-surface-variant m-0">Sửa đổi tiêu đề hoặc mô tả sự cố nếu cần thiết.</p>
+            </div>
+        </div>
+
+        <form asp-action="Edit" class="p-8 space-y-6 m-0">
+            <div asp-validation-summary="ModelOnly" class="text-error text-[14px] mb-4"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="KhachThueId" />
+            <input type="hidden" asp-for="NgayTao" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="PhongId" class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Số Phòng</label>
+                    <select asp-for="PhongId" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 outline-none" asp-items="ViewBag.PhongId"></select>
+                    <span asp-validation-for="PhongId" class="text-error text-[12px]"></span>
+                </div>
+
+                <div>
+                    <label asp-for="TrangThai" class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Trạng thái xử lý</label>
+                    <select asp-for="TrangThai" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 outline-none font-bold">
+                        <option value="Mới tiếp nhận">Mới tiếp nhận</option>
+                        <option value="Chờ xử lý">Chờ xử lý</option>
+                        <option value="Đang sửa">Đang sửa</option>
+                        <option value="Đã sửa">Đã sửa</option>
+                        <option value="Hoàn thành">Hoàn thành</option>
+                    </select>
+                    <span asp-validation-for="TrangThai" class="text-error text-[12px]"></span>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="TieuDe" class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Tiêu đề sự cố</label>
+                <input asp-for="TieuDe" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 outline-none" placeholder="Vd: Hỏng hóc thiết bị, mất điện..." />
+                <span asp-validation-for="TieuDe" class="text-error text-[12px]"></span>
+            </div>
+
+            <div>
+                <label asp-for="NoiDung" class="block text-[12px] font-bold text-outline uppercase tracking-wider mb-2">Mô tả chi tiết</label>
+                <textarea asp-for="NoiDung" class="w-full border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] py-2.5 px-3 resize-none outline-none" rows="5" placeholder="Nhập chi tiết tình trạng sự cố..."></textarea>
+                <span asp-validation-for="NoiDung" class="text-error text-[12px]"></span>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
+                <a asp-action="Index" class="px-6 py-2.5 border border-outline-variant bg-transparent text-on-surface rounded-lg hover:bg-surface-container-lowest transition-all font-medium text-decoration-none">
+                    Hủy bỏ
+                </a>
+                <button type="submit" class="flex items-center gap-2 px-6 py-2.5 bg-amber-500 text-white rounded-lg shadow-md hover:bg-amber-600 transition-all font-bold border-0 cursor-pointer">
+                    <span class="material-symbols-outlined">save</span>
+                    Lưu cập nhật
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
