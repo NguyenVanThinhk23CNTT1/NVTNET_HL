@@ -1,0 +1,83 @@
+@model NvtHouseManagement.Models.NvtDichVu
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Dịch Vụ";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Chỉnh Sửa Dịch Vụ</h2>
+        <nav class="flex text-on-surface-variant text-[14px] font-medium m-0 mt-1">
+            <a href="@Url.Action("Index", "Home")" class="text-on-surface-variant hover:text-primary text-decoration-none">Dashboard</a>
+            <span class="mx-2">/</span>
+            <a href="@Url.Action("Index", "NvtDichVu")" class="text-on-surface-variant hover:text-primary text-decoration-none">Quản lý Dịch Vụ</a>
+            <span class="mx-2">/</span>
+            <span class="text-primary font-bold">@Model.TenDichVu</span>
+        </nav>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden max-w-2xl">
+    <div class="px-8 py-6 border-b border-slate-100 bg-surface-container-lowest">
+        <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">edit</span>
+            Cập nhật thông tin dịch vụ
+        </h3>
+    </div>
+    <form asp-action="Edit" class="p-8 m-0">
+        <div asp-validation-summary="ModelOnly" class="text-error text-[14px] mb-4"></div>
+        <input type="hidden" asp-for="Id" />
+        
+        <div class="space-y-6">
+            <div>
+                <label asp-for="TenDichVu" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Tên Dịch Vụ <span class="text-error">*</span></label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-[20px]">room_service</span>
+                    <input asp-for="TenDichVu" class="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-[14px]" placeholder="VD: Tiền điện, Tiền nước..." required />
+                </div>
+                <span asp-validation-for="TenDichVu" class="text-error text-[12px] mt-1 block"></span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="DonGia" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Đơn Giá (VNĐ) <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <input asp-for="DonGia" type="number" step="0.01" class="w-full pl-4 pr-12 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-[14px]" placeholder="0" required />
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-outline font-medium">₫</span>
+                    </div>
+                    <span asp-validation-for="DonGia" class="text-error text-[12px] mt-1 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="DonViTinh" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Đơn Vị Tính <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <select asp-for="DonViTinh" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-lg text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none outline-none shadow-none" required>
+                            <option value="Tháng">Tháng</option>
+                            <option value="Người">Người</option>
+                            <option value="Phòng">Phòng</option>
+                            <option value="kWh">kWh (Điện)</option>
+                            <option value="m3">m3 (Nước)</option>
+                            <option value="Lần">Lần</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                    </div>
+                    <span asp-validation-for="DonViTinh" class="text-error text-[12px] mt-1 block"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-slate-100">
+            <a href="@Url.Action("Index")" class="px-6 py-3 rounded-lg border-0 bg-surface-container-low text-on-surface-variant text-[14px] font-bold hover:bg-surface-container transition-all text-decoration-none cursor-pointer flex items-center">
+                Hủy bỏ
+            </a>
+            <button type="submit" class="px-8 py-3 bg-primary text-white rounded-lg text-[14px] font-bold hover:bg-primary-container transition-all shadow-md border-0 cursor-pointer flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                Lưu Thay Đổi
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

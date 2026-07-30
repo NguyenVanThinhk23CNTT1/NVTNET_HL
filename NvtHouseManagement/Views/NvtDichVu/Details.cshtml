@@ -1,0 +1,103 @@
+@model NvtHouseManagement.Models.NvtDichVu
+
+@{
+    ViewData["Title"] = "Chi tiết Dịch Vụ";
+    
+    // Helper function to pick icon based on service name
+    string GetIconForService(string name) {
+        var lower = name.ToLower();
+        if (lower.Contains("điện")) return "bolt";
+        if (lower.Contains("nước")) return "water_drop";
+        if (lower.Contains("rác") || lower.Contains("vệ sinh")) return "cleaning_services";
+        if (lower.Contains("wifi") || lower.Contains("mạng") || lower.Contains("internet")) return "wifi";
+        if (lower.Contains("xe") || lower.Contains("giữ")) return "local_parking";
+        if (lower.Contains("thang máy") || lower.Contains("bảo trì")) return "elevator";
+        if (lower.Contains("an ninh") || lower.Contains("bảo vệ")) return "security";
+        return "room_service";
+    }
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Chi Tiết Dịch Vụ</h2>
+        <nav class="flex text-on-surface-variant text-[14px] font-medium m-0 mt-1">
+            <a href="@Url.Action("Index", "Home")" class="text-on-surface-variant hover:text-primary text-decoration-none">Dashboard</a>
+            <span class="mx-2">/</span>
+            <a href="@Url.Action("Index", "NvtDichVu")" class="text-on-surface-variant hover:text-primary text-decoration-none">Quản lý Dịch Vụ</a>
+            <span class="mx-2">/</span>
+            <span class="text-primary font-bold">@Model.TenDichVu</span>
+        </nav>
+    </div>
+    
+    <div class="flex gap-3">
+        <a href="@Url.Action("Edit", new { id = Model.Id })" class="px-6 py-3 bg-primary text-white rounded-lg text-[14px] font-bold hover:bg-primary-container transition-all shadow-md text-decoration-none flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+            Chỉnh sửa dịch vụ
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Main Info -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-surface-container-lowest">
+                <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    Thông tin Dịch vụ
+                </h3>
+            </div>
+            <div class="p-8">
+                <div class="flex items-center gap-6 mb-8">
+                    <div class="w-20 h-20 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[40px]">@GetIconForService(Model.TenDichVu)</span>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">ID: SV-@Model.Id.ToString("D3")</p>
+                        <h4 class="text-[28px] font-bold text-on-surface m-0">@Model.TenDichVu</h4>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 bg-surface-container-lowest p-6 rounded-xl border border-slate-100">
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Đơn Giá Cố Định</p>
+                        <p class="text-[24px] font-bold text-primary m-0">@Model.DonGia.ToString("N0") VNĐ</p>
+                    </div>
+                    <div>
+                        <p class="text-[12px] font-bold text-on-surface-variant uppercase mb-1 m-0">Đơn Vị Tính</p>
+                        <p class="text-[24px] font-semibold text-on-surface m-0">/ @Model.DonViTinh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Sidebar / Actions -->
+    <div class="space-y-6">
+        <div class="bg-surface-container-low rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-[16px] font-bold text-on-surface mb-4 m-0 uppercase tracking-wider text-center">Thao tác hệ thống</h3>
+            
+            <div class="flex flex-col gap-3">
+                <a href="@Url.Action("Index")" class="w-full py-3 bg-white text-on-surface font-bold text-[14px] rounded-lg border border-slate-200 hover:bg-slate-50 transition-all text-center text-decoration-none">
+                    Về danh sách
+                </a>
+                
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="m-0" onsubmit="return confirm('Xóa dịch vụ sẽ ảnh hưởng đến các hóa đơn đang dùng. Bạn có chắc chắn?');">
+                    <button type="submit" class="w-full py-3 bg-error/10 text-error font-bold text-[14px] rounded-lg border border-transparent hover:bg-error/20 transition-all cursor-pointer flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                        Xóa Dịch Vụ
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="bg-primary/5 rounded-xl border border-primary/20 p-5">
+            <h4 class="text-[14px] font-bold text-primary mb-2 m-0 flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">tips_and_updates</span> Mẹo nhỏ
+            </h4>
+            <p class="text-[12px] text-on-surface-variant m-0 leading-relaxed">
+                Đơn giá được thay đổi tại đây sẽ áp dụng làm <strong>mặc định</strong> cho các tháng tiếp theo. Nó không làm thay đổi các hóa đơn cũ đã chốt.
+            </p>
+        </div>
+    </div>
+</div>

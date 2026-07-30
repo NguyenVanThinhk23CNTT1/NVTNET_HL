@@ -1,0 +1,126 @@
+@model NvtHouseManagement.Models.NvtChotDienNuoc
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Chốt Điện Nước";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 mt-2">
+    <div>
+        <h2 class="text-[28px] font-bold text-on-surface m-0">Chỉnh sửa Chốt Điện Nước</h2>
+        <nav class="flex text-on-surface-variant text-[14px] font-medium m-0 mt-1">
+            <a href="@Url.Action("Index", "Home")" class="text-on-surface-variant hover:text-primary text-decoration-none">Dashboard</a>
+            <span class="mx-2">/</span>
+            <a href="@Url.Action("Index", "NvtChotDienNuoc")" class="text-on-surface-variant hover:text-primary text-decoration-none">Chốt điện nước</a>
+            <span class="mx-2">/</span>
+            <span class="text-primary font-bold">Chỉnh sửa</span>
+        </nav>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden max-w-4xl">
+    <div class="px-8 py-6 border-b border-slate-100 bg-surface-container-lowest">
+        <h3 class="text-[18px] font-bold text-on-surface m-0 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">edit</span>
+            Cập nhật ghi nhận điện nước
+        </h3>
+        <p class="text-[13px] text-error font-medium m-0 mt-1">Lưu ý: Việc sửa đổi số liệu ở đây sẽ KHÔNG tự động cập nhật lại Hóa đơn đã sinh ra trước đó.</p>
+    </div>
+    <form asp-action="Edit" class="p-8 m-0">
+        <div asp-validation-summary="ModelOnly" class="text-error text-[14px] mb-4"></div>
+        <input type="hidden" asp-for="Id" />
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 space-y-0">
+            <!-- Thông tin chung -->
+            <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6 bg-surface-container-lowest p-6 rounded-xl border border-slate-100">
+                <div>
+                    <label asp-for="PhongId" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Chọn Phòng <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <select asp-for="PhongId" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-lg text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none outline-none shadow-none" asp-items="ViewBag.PhongId" required>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <label asp-for="Thang" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Kỳ Chốt (Tháng) <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <select asp-for="Thang" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-lg text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none outline-none shadow-none" required>
+                            @for(int i=1; i<=12; i++) {
+                                <option value="@i">Tháng @i</option>
+                            }
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <label asp-for="Nam" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Kỳ Chốt (Năm) <span class="text-error">*</span></label>
+                    <div class="relative">
+                        <input asp-for="Nam" type="number" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[14px] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none shadow-none" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHỈ SỐ ĐIỆN -->
+            <div class="border border-amber-200 bg-amber-50/30 rounded-xl p-6">
+                <h4 class="text-[16px] font-bold text-amber-700 m-0 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">bolt</span> Chỉ số ĐIỆN (kWh)
+                </h4>
+                <div class="space-y-4">
+                    <div>
+                        <label asp-for="SoDienCu" class="block text-[12px] font-semibold text-on-surface-variant mb-1">Số cũ (Đầu kỳ)</label>
+                        <input asp-for="SoDienCu" type="number" class="w-full px-4 py-3 bg-white border border-amber-200 rounded-lg text-[14px] focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none shadow-none" required />
+                        <span asp-validation-for="SoDienCu" class="text-error text-[12px] mt-1 block"></span>
+                    </div>
+                    <div>
+                        <label asp-for="SoDienMoi" class="block text-[12px] font-bold text-on-surface mb-1">Số mới (Cuối kỳ)</label>
+                        <input asp-for="SoDienMoi" type="number" class="w-full px-4 py-3 bg-white border border-amber-300 shadow-sm rounded-lg text-[14px] font-bold text-amber-700 focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 outline-none" required />
+                        <span asp-validation-for="SoDienMoi" class="text-error text-[12px] mt-1 block"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHỈ SỐ NƯỚC -->
+            <div class="border border-blue-200 bg-blue-50/30 rounded-xl p-6">
+                <h4 class="text-[16px] font-bold text-blue-700 m-0 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">water_drop</span> Chỉ số NƯỚC (m3)
+                </h4>
+                <div class="space-y-4">
+                    <div>
+                        <label asp-for="SoNuocCu" class="block text-[12px] font-semibold text-on-surface-variant mb-1">Số cũ (Đầu kỳ)</label>
+                        <input asp-for="SoNuocCu" type="number" class="w-full px-4 py-3 bg-white border border-blue-200 rounded-lg text-[14px] focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none shadow-none" required />
+                        <span asp-validation-for="SoNuocCu" class="text-error text-[12px] mt-1 block"></span>
+                    </div>
+                    <div>
+                        <label asp-for="SoNuocMoi" class="block text-[12px] font-bold text-on-surface mb-1">Số mới (Cuối kỳ)</label>
+                        <input asp-for="SoNuocMoi" type="number" class="w-full px-4 py-3 bg-white border border-blue-300 shadow-sm rounded-lg text-[14px] font-bold text-blue-700 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 outline-none" required />
+                        <span asp-validation-for="SoNuocMoi" class="text-error text-[12px] mt-1 block"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:col-span-2">
+                <label asp-for="NgayChot" class="block text-[12px] font-bold text-on-surface mb-2 uppercase">Ngày thực hiện chốt số</label>
+                <div class="relative max-w-sm">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-[20px]">calendar_month</span>
+                    <input asp-for="NgayChot" type="date" class="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-[14px]" required />
+                </div>
+                <span asp-validation-for="NgayChot" class="text-error text-[12px] mt-1 block"></span>
+            </div>
+        </div>
+        
+        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-slate-100">
+            <a href="@Url.Action("Index")" class="px-6 py-3 rounded-lg border-0 bg-surface-container-low text-on-surface-variant text-[14px] font-bold hover:bg-surface-container transition-all text-decoration-none cursor-pointer flex items-center">
+                Hủy bỏ
+            </a>
+            <button type="submit" class="px-8 py-3 bg-primary text-white rounded-lg text-[14px] font-bold hover:bg-primary-container transition-all shadow-md border-0 cursor-pointer flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                Lưu Thay Đổi
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,321 @@
+@model NvtHouseManagement.Models.NvtChotDienNuoc
+
+@{
+    ViewData["Title"] = "Chốt Điện Nước & Hóa Đơn";
+}
+
+<style>
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+</style>
+
+<div class="mb-8 mt-2">
+    <h2 class="text-[28px] font-bold text-on-surface m-0">Chốt Điện Nước & Lập Hóa Đơn</h2>
+    <p class="text-[16px] text-on-surface-variant m-0 mt-1">Ghi nhận chỉ số điện, nước hàng tháng và tự động xuất hóa đơn cho khách thuê.</p>
+</div>
+
+<!-- Dashboard Layout (Asymmetric) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- LEFT COLUMN: Input Form -->
+    <div class="lg:col-span-7 space-y-6">
+        <section class="bg-white rounded-xl shadow-sm border border-outline-variant p-6">
+            <div class="flex items-center gap-2 mb-6 text-primary">
+                <span class="material-symbols-outlined">edit_note</span>
+                <h3 class="text-[20px] font-bold m-0">Nhập Liệu Chỉ Số</h3>
+            </div>
+            <form asp-action="Create" id="utilityForm" class="space-y-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-medium text-on-surface-variant mb-0" asp-for="PhongId">Chọn Phòng</label>
+                        <select asp-for="PhongId" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 shadow-none" asp-items="ViewBag.PhongId" id="PhongId">
+                            <option value="">Chọn phòng...</option>
+                        </select>
+                        <span asp-validation-for="PhongId" class="text-danger text-[12px]"></span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="space-y-1">
+                            <label class="text-[12px] font-medium text-on-surface-variant mb-0" asp-for="Thang">Tháng</label>
+                            <select asp-for="Thang" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 shadow-none" id="Thang">
+                                @for (int i = 1; i <= 12; i++)
+                                {
+                                    if (i == DateTime.Now.Month)
+                                    {
+                                        <option value="@i" selected>@i</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="Thang" class="text-danger text-[12px]"></span>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[12px] font-medium text-on-surface-variant mb-0" asp-for="Nam">Năm</label>
+                            <select asp-for="Nam" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 shadow-none" id="Nam">
+                                @for (int i = DateTime.Now.Year - 1; i <= DateTime.Now.Year + 1; i++)
+                                {
+                                    if (i == DateTime.Now.Year)
+                                    {
+                                        <option value="@i" selected>@i</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="Nam" class="text-danger text-[12px]"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-surface-container-highest mt-4">
+                    <!-- Electricity -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-secondary font-bold">
+                            <span class="material-symbols-outlined">bolt</span>
+                            <span>Điện (kWh)</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-outline uppercase tracking-wider mb-0" asp-for="SoDienCu">Số Cũ</label>
+                                <input asp-for="SoDienCu" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 bg-surface-container-low shadow-none" id="SoDienCu" type="number" />
+                                <span asp-validation-for="SoDienCu" class="text-danger text-[12px]"></span>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-outline uppercase tracking-wider mb-0" asp-for="SoDienMoi">Số Mới</label>
+                                <input asp-for="SoDienMoi" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 shadow-none" id="SoDienMoi" placeholder="0" type="number" />
+                                <span asp-validation-for="SoDienMoi" class="text-danger text-[12px]"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Water -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-blue-600 font-bold">
+                            <span class="material-symbols-outlined">water_drop</span>
+                            <span>Nước (m³)</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-outline uppercase tracking-wider mb-0" asp-for="SoNuocCu">Số Cũ</label>
+                                <input asp-for="SoNuocCu" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 bg-surface-container-low shadow-none" id="SoNuocCu" type="number" />
+                                <span asp-validation-for="SoNuocCu" class="text-danger text-[12px]"></span>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[11px] text-outline uppercase tracking-wider mb-0" asp-for="SoNuocMoi">Số Mới</label>
+                                <input asp-for="SoNuocMoi" class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 shadow-none" id="SoNuocMoi" placeholder="0" type="number" />
+                                <span asp-validation-for="SoNuocMoi" class="text-danger text-[12px]"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Services -->
+                <div class="pt-4 space-y-4 mt-4 border-t border-surface-container-highest">
+                    <div class="flex items-center gap-2 text-tertiary font-bold">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        <span>Dịch Vụ Khác (Mặc định)</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[12px] font-medium text-on-surface-variant mb-0">Phí Dịch Vụ (VND)</label>
+                            <input class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 bg-surface-container-low shadow-none" id="TienDichVuKhac" type="number" value="50000" readonly />
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[12px] font-medium text-on-surface-variant mb-0">Mô Tả</label>
+                            <input class="w-full border-outline-variant rounded-lg text-[14px] px-3 py-2 bg-surface-container-low shadow-none" id="MoTa" type="text" value="Phí rác, Wifi" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between p-4 bg-primary/5 rounded-xl border border-primary/20 mt-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined">payments</span>
+                        </div>
+                        <div>
+                            <p class="text-[12px] text-on-surface-variant m-0">Ước Tính Tổng Tiền</p>
+                            <p class="text-[20px] font-bold text-primary m-0" id="totalDisplay">0 VND</p>
+                        </div>
+                    </div>
+                    <button type="submit" class="border-0 px-6 py-3 bg-primary text-white font-bold rounded-lg hover:opacity-90 shadow-lg shadow-primary/20 flex items-center gap-2 transition-all active:scale-95" id="btnSubmitForm">
+                        <span class="material-symbols-outlined">save</span>
+                        Lưu & Tạo Hóa Đơn
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- RIGHT COLUMN: Invoice Preview -->
+    <div class="lg:col-span-5">
+        <div class="sticky top-[96px]">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-outline-variant">
+                <div class="bg-[#302f39] p-4 text-white flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined">receipt</span>
+                        <span class="font-bold text-[14px]">PREVIEW HÓA ĐƠN</span>
+                    </div>
+                    <span class="text-xs opacity-70">#INV-DRAFT</span>
+                </div>
+                <div class="p-8 space-y-6">
+                    <!-- Header -->
+                    <div class="text-center pb-6 border-b border-dashed border-outline-variant">
+                        <h4 class="text-[20px] font-bold text-on-surface m-0" id="previewRoom">Chưa Chọn Phòng</h4>
+                        <p class="text-[14px] text-outline m-0 mt-1">Kỳ cước: <span id="previewPeriod">@DateTime.Now.Month/@DateTime.Now.Year</span></p>
+                    </div>
+
+                    <!-- Line Items -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-[14px] font-bold text-on-surface m-0">Tiền Thuê Phòng</p>
+                                <p class="text-[12px] text-outline m-0">Giá thuê theo hợp đồng</p>
+                            </div>
+                            <p class="text-[14px] text-on-surface m-0 font-medium" id="previewRent">0 VND</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-[14px] font-bold text-on-surface m-0">Tiền Điện</p>
+                                <p class="text-[12px] text-outline m-0"><span id="previewElecUsed">0</span> kWh @@ 3,500/kWh</p>
+                            </div>
+                            <p class="text-[14px] text-on-surface m-0 font-medium" id="previewElecCost">0 VND</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-[14px] font-bold text-on-surface m-0">Tiền Nước</p>
+                                <p class="text-[12px] text-outline m-0"><span id="previewWaterUsed">0</span> m³ @@ 10,000/m³</p>
+                            </div>
+                            <p class="text-[14px] text-on-surface m-0 font-medium" id="previewWaterCost">0 VND</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-[14px] font-bold text-on-surface m-0">Dịch Vụ Khác</p>
+                                <p class="text-[12px] text-outline m-0" id="previewOtherDesc">Phí rác, Wifi</p>
+                            </div>
+                            <p class="text-[14px] text-on-surface m-0 font-medium" id="previewOtherCost">50,000 VND</p>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="pt-6 border-t-2 border-on-surface-variant/10">
+                        <div class="flex justify-between items-center bg-surface-container-low p-4 rounded-lg">
+                            <span class="font-bold text-on-surface text-[14px]">TỔNG CỘNG</span>
+                            <span class="text-[20px] font-bold text-primary" id="previewGrandTotal">0 VND</span>
+                        </div>
+                    </div>
+
+                    <!-- Footer Note -->
+                    <div class="text-center text-[10px] text-outline italic">
+                        Thanh toán từ mùng 1 đến mùng 5 hàng tháng. Xin cảm ơn.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats / Helper -->
+            <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-blue-100 text-blue-600">
+                        <span class="material-symbols-outlined">trending_up</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-outline uppercase font-bold m-0">Giá Điện</p>
+                        <p class="text-[14px] font-bold text-on-surface m-0">3,500 đ</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-outline-variant shadow-sm flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-green-100 text-green-600">
+                        <span class="material-symbols-outlined">trending_up</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-outline uppercase font-bold m-0">Giá Nước</p>
+                        <p class="text-[14px] font-bold text-on-surface m-0">10,000 đ</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a asp-action="Index" class="text-primary text-[14px] font-bold text-decoration-none hover:underline flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span> Trở lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        const ELEC_PRICE = 3500;
+        const WATER_PRICE = 10000;
+        const OTHER_SERVICES = 50000;
+
+        function updateCalculations() {
+            const roomEl = document.getElementById('PhongId');
+            const roomOption = roomEl.options[roomEl.selectedIndex];
+            
+            // For preview purpose, assuming a default 2m rent if no actual rent data available via select
+            const baseRent = roomOption && roomEl.value ? 2000000 : 0; 
+            
+            const dienCu = parseInt(document.getElementById('SoDienCu').value || 0);
+            const dienMoi = parseInt(document.getElementById('SoDienMoi').value || 0);
+            const nuocCu = parseInt(document.getElementById('SoNuocCu').value || 0);
+            const nuocMoi = parseInt(document.getElementById('SoNuocMoi').value || 0);
+            const thang = document.getElementById('Thang').value;
+            const nam = document.getElementById('Nam').value;
+
+            const elecUsed = Math.max(0, dienMoi - dienCu);
+            const waterUsed = Math.max(0, nuocMoi - nuocCu);
+            
+            const elecCost = elecUsed * ELEC_PRICE;
+            const waterCost = waterUsed * WATER_PRICE;
+            const grandTotal = baseRent + elecCost + waterCost + OTHER_SERVICES;
+
+            // Update UI
+            document.getElementById('totalDisplay').textContent = grandTotal.toLocaleString('vi-VN') + ' VND';
+            
+            // Update Preview
+            document.getElementById('previewRoom').textContent = roomEl.value ? `Phòng ${roomOption.text}` : 'Chưa Chọn Phòng';
+            document.getElementById('previewPeriod').textContent = `${thang}/${nam}`;
+            document.getElementById('previewRent').textContent = baseRent.toLocaleString('vi-VN') + ' VND' + (baseRent > 0 ? ' (Tạm tính)' : '');
+            document.getElementById('previewElecUsed').textContent = elecUsed;
+            document.getElementById('previewElecCost').textContent = elecCost.toLocaleString('vi-VN') + ' VND';
+            document.getElementById('previewWaterUsed').textContent = waterUsed;
+            document.getElementById('previewWaterCost').textContent = waterCost.toLocaleString('vi-VN') + ' VND';
+            document.getElementById('previewOtherCost').textContent = OTHER_SERVICES.toLocaleString('vi-VN') + ' VND';
+            document.getElementById('previewGrandTotal').textContent = grandTotal.toLocaleString('vi-VN') + ' VND';
+        }
+
+        const inputs = [
+            'PhongId', 'SoDienCu', 'SoDienMoi', 'SoNuocCu', 'SoNuocMoi', 'Thang', 'Nam'
+        ];
+        
+        inputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', updateCalculations);
+        });
+
+        // Add loading state to button when form submits
+        document.getElementById('utilityForm').addEventListener('submit', function() {
+            const btn = document.getElementById('btnSubmitForm');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin" style="animation: spin 1s linear infinite;">sync</span> Đang lưu...`;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+        });
+
+        // Initial calc
+        updateCalculations();
+    </script>
+}
