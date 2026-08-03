@@ -1,0 +1,409 @@
+@model NvtHouseManagement.Models.DangKyThueViewModel
+
+@{
+    ViewData["Title"] = "Đăng Ký Thuê Phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Assuming a shared layout exists
+}
+
+<style>
+    /* Premium Glassmorphism Form Design */
+    .register-container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .register-container::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 6px;
+        background: linear-gradient(90deg, #4CAF50, #2E7D32);
+    }
+
+    /* Progress Bar */
+    .progressbar {
+        display: flex;
+        justify-content: space-between;
+        counter-reset: step;
+        margin-bottom: 40px;
+        position: relative;
+    }
+    .progressbar::before {
+        content: '';
+        background-color: #e0e0e0;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 4px;
+        z-index: 1;
+    }
+    .progress-line {
+        position: absolute;
+        background-color: #4CAF50;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 0%;
+        height: 4px;
+        z-index: 2;
+        transition: 0.4s ease;
+    }
+    .progress-step {
+        width: 40px;
+        height: 40px;
+        background-color: #fff;
+        border: 4px solid #e0e0e0;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 3;
+        font-weight: bold;
+        color: #999;
+        transition: 0.4s ease;
+    }
+    .progress-step.active {
+        border-color: #4CAF50;
+        color: #4CAF50;
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+    }
+    .progress-step::before {
+        counter-increment: step;
+        content: counter(step);
+    }
+
+    /* Form Steps */
+    .form-step {
+        display: none;
+        animation: fadeIn 0.5s;
+    }
+    .form-step.active {
+        display: block;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Inputs */
+    .input-group {
+        margin-bottom: 20px;
+    }
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+    .input-group input, .input-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s;
+        background: #f9f9f9;
+    }
+    .input-group input:focus, .input-group select:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        outline: none;
+        background: #fff;
+    }
+    
+    /* Buttons */
+    .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+    .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn-next {
+        background: #4CAF50;
+        color: white;
+        margin-left: auto;
+    }
+    .btn-next:hover { background: #388E3C; }
+    .btn-prev {
+        background: #e0e0e0;
+        color: #333;
+    }
+    .btn-prev:hover { background: #ccc; }
+    .btn-submit {
+        background: #1976D2;
+        color: white;
+    }
+    .btn-submit:hover { background: #1565C0; }
+
+    /* Summary Card */
+    .summary-card {
+        background: #f1f8e9;
+        border: 1px solid #c5e1a5;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+    .summary-row.total {
+        border-top: 2px dashed #9ccc65;
+        padding-top: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #2E7D32;
+    }
+
+    .error-message {
+        color: #d32f2f;
+        font-size: 13px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+
+<div class="register-container">
+    <h2 class="text-center mb-4" style="color: #2E7D32; font-weight: 800;">Tạo Hợp Đồng Thuê Nhanh</h2>
+    <p class="text-center text-muted mb-5">Hệ thống sẽ tự động tạo Khách hàng, Hợp đồng và phát sinh Hóa đơn tháng đầu tiên.</p>
+
+    <!-- Progress Bar -->
+    <div class="progressbar">
+        <div class="progress-line" id="progress"></div>
+        <div class="progress-step active" data-title="Khách Hàng"></div>
+        <div class="progress-step" data-title="Hợp Đồng"></div>
+        <div class="progress-step" data-title="Thanh Toán"></div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            Vui lòng kiểm tra lại thông tin nhập.
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+    }
+
+    <form asp-action="Index" method="post" id="registerForm">
+        <!-- Bước 1: Thông tin khách -->
+        <div class="form-step active" id="step1">
+            <h4 class="mb-4"><i class="fas fa-user-circle"></i> Bước 1: Thông tin cá nhân</h4>
+            <div class="row">
+                <div class="col-md-6 input-group">
+                    <label>Họ và Tên (*)</label>
+                    <input asp-for="HoTen" placeholder="Nhập họ tên đầy đủ" required />
+                    <span asp-validation-for="HoTen" class="error-message"></span>
+                </div>
+                <div class="col-md-6 input-group">
+                    <label>Số điện thoại (*)</label>
+                    <input asp-for="SoDienThoai" placeholder="Nhập số điện thoại" required />
+                    <span asp-validation-for="SoDienThoai" class="error-message"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 input-group">
+                    <label>Căn cước công dân (*)</label>
+                    <input asp-for="Cccd" placeholder="Nhập số CCCD" required />
+                    <span asp-validation-for="Cccd" class="error-message"></span>
+                </div>
+                <div class="col-md-6 input-group">
+                    <label>Email</label>
+                    <input asp-for="Email" type="email" placeholder="Nhập email (Tùy chọn)" />
+                    <span asp-validation-for="Email" class="error-message"></span>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Quê quán</label>
+                <input asp-for="QueQuan" placeholder="Nhập địa chỉ, quê quán..." />
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-next" onclick="nextStep(1)">Tiếp tục <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Bước 2: Thông tin hợp đồng -->
+        <div class="form-step" id="step2">
+            <h4 class="mb-4"><i class="fas fa-file-contract"></i> Bước 2: Thông tin thuê phòng</h4>
+            <div class="input-group">
+                <label>Chọn Phòng Thuê (*)</label>
+                <select asp-for="PhongId" asp-items="ViewBag.PhongId" required>
+                    <option value="">-- Chọn phòng đang trống --</option>
+                </select>
+                <span asp-validation-for="PhongId" class="error-message"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6 input-group">
+                    <label>Ngày bắt đầu (*)</label>
+                    <input asp-for="NgayBatDau" type="date" required />
+                    <span asp-validation-for="NgayBatDau" class="error-message"></span>
+                </div>
+                <div class="col-md-6 input-group">
+                    <label>Ngày kết thúc (*)</label>
+                    <input asp-for="NgayKetThuc" type="date" required />
+                    <span asp-validation-for="NgayKetThuc" class="error-message"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 input-group">
+                    <label>Giá thuê thực tế (VNĐ/Tháng) (*)</label>
+                    <input asp-for="GiaThueThucTe" type="number" id="GiaThueInput" placeholder="Ví dụ: 3000000" oninput="updateSummary()" required />
+                    <span asp-validation-for="GiaThueThucTe" class="error-message"></span>
+                </div>
+                <div class="col-md-6 input-group">
+                    <label>Tiền cọc (VNĐ) (*)</label>
+                    <input asp-for="TienCoc" type="number" id="TienCocInput" placeholder="Ví dụ: 3000000" oninput="updateSummary()" required />
+                    <span asp-validation-for="TienCoc" class="error-message"></span>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Phụ phí khác tháng đầu tiên (Nếu có)</label>
+                <input asp-for="TienDichVuKhac" type="number" id="TienKhacInput" value="0" oninput="updateSummary()" />
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-prev" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Quay lại</button>
+                <button type="button" class="btn btn-next" onclick="nextStep(2)">Tiếp tục <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Bước 3: Xác nhận & Hóa đơn -->
+        <div class="form-step" id="step3">
+            <h4 class="mb-4"><i class="fas fa-check-circle"></i> Bước 3: Xác nhận Tạo Hợp Đồng</h4>
+            <p>Vui lòng xác nhận các khoản tiền hệ thống sẽ tự động tạo vào <strong>Hóa đơn tháng đầu tiên</strong> cho khách hàng này.</p>
+            
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span>Tiền Cọc (Giữ chỗ):</span>
+                    <span id="sumCoc">0 VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tiền Thuê (Tháng đầu):</span>
+                    <span id="sumThue">0 VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phụ phí / Dịch vụ khác:</span>
+                    <span id="sumKhac">0 VNĐ</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Tổng tiền thu tháng 1:</span>
+                    <span id="sumTotal">0 VNĐ</span>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <i class="fas fa-info-circle"></i> <strong>Lưu ý:</strong> Khi nhấn "Hoàn Tất", hệ thống sẽ đồng loạt lưu Khách hàng, Hợp đồng, tạo Hóa đơn và khóa Phòng này. Quá trình này không thể hoàn tác lập tức.
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-prev" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Quay lại</button>
+                <button type="submit" class="btn btn-submit"><i class="fas fa-save"></i> HOÀN TẤT ĐĂNG KÝ</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateProgressBar() {
+            const progressSteps = document.querySelectorAll('.progress-step');
+            const progress = document.getElementById('progress');
+            
+            progressSteps.forEach((step, idx) => {
+                if(idx < currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            
+            const activeSteps = document.querySelectorAll('.progress-step.active');
+            progress.style.width = ((activeSteps.length - 1) / (progressSteps.length - 1)) * 100 + '%';
+        }
+
+        function validateCurrentStep(step) {
+            // Basic validation for the current step
+            let isValid = true;
+            const stepDiv = document.getElementById('step' + step);
+            const inputs = stepDiv.querySelectorAll('input[required], select[required]');
+            inputs.forEach(input => {
+                if(!input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#d32f2f';
+                    // Optionally shake
+                    input.classList.add('shake');
+                    setTimeout(() => input.classList.remove('shake'), 500);
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+            return isValid;
+        }
+
+        function nextStep(step) {
+            if(!validateCurrentStep(step)) return;
+
+            document.getElementById('step' + step).classList.remove('active');
+            currentStep++;
+            document.getElementById('step' + currentStep).classList.add('active');
+            updateProgressBar();
+            
+            if(currentStep === 3) {
+                updateSummary();
+            }
+        }
+
+        function prevStep(step) {
+            document.getElementById('step' + step).classList.remove('active');
+            currentStep--;
+            document.getElementById('step' + currentStep).classList.add('active');
+            updateProgressBar();
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('vi-VN').format(num) + ' VNĐ';
+        }
+
+        function updateSummary() {
+            const giaThue = parseFloat(document.getElementById('GiaThueInput').value) || 0;
+            const tienCoc = parseFloat(document.getElementById('TienCocInput').value) || 0;
+            const tienKhac = parseFloat(document.getElementById('TienKhacInput').value) || 0;
+            const tongTien = giaThue + tienCoc + tienKhac;
+
+            document.getElementById('sumThue').innerText = formatCurrency(giaThue);
+            document.getElementById('sumCoc').innerText = formatCurrency(tienCoc);
+            document.getElementById('sumKhac').innerText = formatCurrency(tienKhac);
+            document.getElementById('sumTotal').innerText = formatCurrency(tongTien);
+        }
+    </script>
+    <style>
+        .shake {
+            animation: shake 0.5s;
+        }
+        @@keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+}
